@@ -1,0 +1,578 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BA700ADF-D563-4C80-BAF7-458452E3B189}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ScrapMaricopa</RootNamespace>
+    <AssemblyName>ScrapMaricopa</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <UseIISExpress>false</UseIISExpress>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AddressParser">
+      <HintPath>..\Integration\trunk- addressplit\WebApplication1\bin\AddressParser.dll</HintPath>
+    </Reference>
+    <Reference Include="AddressParser.Driver">
+      <HintPath>..\Integration\trunk- addressplit\WebApplication1\bin\AddressParser.Driver.exe</HintPath>
+    </Reference>
+    <Reference Include="AddressParser.Test">
+      <HintPath>..\Integration\trunk- addressplit\WebApplication1\bin\AddressParser.Test.dll</HintPath>
+    </Reference>
+    <Reference Include="AjaxControlToolkit">
+      <HintPath>..\Integration\TitleFlex -DTXML\Bin\AjaxControlToolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\..\..\MaricopaClassLibrary\MaricopaClassLibrary\bin\Debug\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp">
+      <HintPath>..\AB Team\3 tier scrapping project\BusinessObjectLayer\bin\Debug\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MySql.Data, Version=5.2.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Integration\API\ScrapingAPI\ScrapingAPI\bin\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Selenium.WebDriverBackedSelenium">
+      <HintPath>C:\Users\madeshwaran.s\Downloads\selenium-dotnet-3.5.1\net40\Selenium.WebDriverBackedSelenium.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebApi.Client.5.2.6\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebApiContrib.Formatting.JavaScriptSerializer, Version=0.9.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\WebApiContrib.Formatting.JavaScriptSerializer.0.9.4.0\lib\net40\WebApiContrib.Formatting.JavaScriptSerializer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebDriver, Version=3.11.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\Selenium.WebDriver.3.11.2\lib\net45\WebDriver.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebDriver.Support, Version=3.11.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\Selenium.Support.3.11.2\lib\net45\WebDriver.Support.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\chromedriver.exe" />
+    <Content Include="bin\HtmlAgilityPack.dll" />
+    <Content Include="bin\itextsharp.dll" />
+    <Content Include="bin\MySql.Data.dll" />
+    <Content Include="bin\phantomjs.exe" />
+    <Content Include="bin\ScrapMaricopa.dll" />
+    <Content Include="bin\ScrapMaricopa.pdb" />
+    <Content Include="bin\Selenium.WebDriverBackedSelenium.dll" />
+    <Content Include="bin\WebDriver.dll" />
+    <Content Include="bin\WebDriver.Support.dll" />
+    <Content Include="bootstrap.css" />
+    <Content Include="bootstrap.min.css" />
+    <Content Include="Bootstrapp.css" />
+    <Content Include="BulkUpload.aspx" />
+    <Content Include="designcss.css" />
+    <Content Include="dist\error.txt" />
+    <Content Include="dist\jquery.loading.min.js" />
+    <Content Include="dist\loading.min.css" />
+    <Content Include="dist\loading.min.js" />
+    <Content Include="Gridstyle.css" />
+    <Content Include="Gridview.js" />
+    <Content Include="House.png" />
+    <Content Include="Image\Home.png" />
+    <Content Include="Loader.js" />
+    <Content Include="logo.png" />
+    <Content Include="obj\Debug\ScrapMaricopa.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\ScrapMaricopa.dll" />
+    <Content Include="obj\Debug\ScrapMaricopa.pdb" />
+    <Content Include="packages\Selenium.Support.3.7.0\lib\net35\WebDriver.Support.xml" />
+    <Content Include="packages\Selenium.Support.3.7.0\lib\net40\WebDriver.Support.xml" />
+    <Content Include="packages\Selenium.Support.3.7.0\lib\net45\WebDriver.Support.xml" />
+    <Content Include="packages\Selenium.Support.3.7.0\lib\netstandard2.0\WebDriver.Support.xml" />
+    <Content Include="packages\Selenium.WebDriver.3.7.0\lib\net35\WebDriver.xml" />
+    <Content Include="packages\Selenium.WebDriver.3.7.0\lib\net40\WebDriver.xml" />
+    <Content Include="packages\Selenium.WebDriver.3.7.0\lib\net45\WebDriver.xml" />
+    <Content Include="packages\Selenium.WebDriver.3.7.0\lib\netstandard2.0\WebDriver.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\dotnet_library_license.txt" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netcore50\de\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netcore50\es\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netcore50\fr\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netcore50\it\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netcore50\ja\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netcore50\ko\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netcore50\ru\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netcore50\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netcore50\zh-hans\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netcore50\zh-hant\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netstandard1.0\de\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netstandard1.0\es\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netstandard1.0\fr\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netstandard1.0\it\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netstandard1.0\ja\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netstandard1.0\ko\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netstandard1.0\ru\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netstandard1.0\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netstandard1.0\zh-hans\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\netstandard1.0\zh-hant\System.ComponentModel.xml" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ThirdPartyNotices.txt" />
+    <Content Include="Pages\Upload.aspx" />
+    <Content Include="PlacerTitle.aspx" />
+    <Content Include="ProgressBar.js" />
+    <Content Include="searchicon.png" />
+    <Content Include="Stars.aspx" />
+    <Content Include="TaxDetails.aspx" />
+    <Content Include="TaxPages.aspx" />
+    <Content Include="StyleSheet.css" />
+    <Content Include="TaxPagesBulk.aspx" />
+    <Content Include="Test.aspx" />
+    <Content Include="Test.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BulkUpload.aspx.cs">
+      <DependentUpon>BulkUpload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BulkUpload.aspx.designer.cs">
+      <DependentUpon>BulkUpload.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DBbulk.cs" />
+    <Compile Include="DBconnection.cs" />
+    <Compile Include="DtConvert.cs" />
+    <Compile Include="GlobalClass.cs" />
+    <Compile Include="lereta\LeretaData.cs" />
+    <Compile Include="lereta\scrape.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Include="Pages\Upload.aspx.cs">
+      <DependentUpon>Upload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Upload.aspx.designer.cs">
+      <DependentUpon>Upload.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Placer.cs" />
+    <Compile Include="PlacerTitle.aspx.cs">
+      <DependentUpon>PlacerTitle.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PlacerTitle.aspx.designer.cs">
+      <DependentUpon>PlacerTitle.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scrapsource\Webdiver_CASantaClara.cs" />
+    <Compile Include="Scrapsource\Webdiver_FLMarion.cs" />
+    <Compile Include="Scrapsource\Webdiver_GACoweta.cs" />
+    <Compile Include="Scrapsource\Webdiver_GAHall.cs" />
+    <Compile Include="Scrapsource\Webdiver_TNHamilton.cs" />
+    <Compile Include="Scrapsource\Webdiver_WVBerkeley.cs" />
+    <Compile Include="Scrapsource\WebDriver_AdaID.cs" />
+    <Compile Include="Scrapsource\Webdriver_AdamsCO.cs" />
+    <Compile Include="Scrapsource\WebDriver_AlachuaFL.cs" />
+    <Compile Include="Scrapsource\WebDriver_AllenIN.cs" />
+    <Compile Include="Scrapsource\Webdriver_AndersonSC.cs" />
+    <Compile Include="Scrapsource\Webdriver_AnneArundelMD.cs" />
+    <Compile Include="Scrapsource\Webdriver_ArapahoeCO.cs" />
+    <Compile Include="Scrapsource\WebDriver_BaldwinAL.cs" />
+    <Compile Include="Scrapsource\WebDriver_BayFL.cs" />
+    <Compile Include="Scrapsource\WebDriver_BeaufortSC.cs" />
+    <Compile Include="Scrapsource\Webdriver_BellTX.cs" />
+    <Compile Include="Scrapsource\WebDriver_BentonAR.cs" />
+    <Compile Include="Scrapsource\Webdriver_BoulderCO.cs" />
+    <Compile Include="Scrapsource\WebDriver_BrevardFL.cs" />
+    <Compile Include="Scrapsource\Webdriver_BuncombeNC.cs" />
+    <Compile Include="Scrapsource\WebDriver_ButlerOH.cs" />
+    <Compile Include="Scrapsource\Webdriver_CalcasieuLA.cs" />
+    <Compile Include="Scrapsource\Webdriver_CAorange.cs" />
+    <Compile Include="Scrapsource\WebDriver_CASan Diego.cs" />
+    <Compile Include="Scrapsource\WebDriver_CASanBernardino.cs" />
+    <Compile Include="Scrapsource\Webdriver_CharlesMD.cs" />
+    <Compile Include="Scrapsource\WebDriver_CharlotteFL.cs" />
+    <Compile Include="Scrapsource\Webdriver_CitrusFL.cs" />
+    <Compile Include="Scrapsource\WebDriver_CobbGA.cs" />
+    <Compile Include="Scrapsource\WebDriver_ComalTX.cs" />
+    <Compile Include="Scrapsource\Webdriver_COOKIL.cs" />
+    <Compile Include="Scrapsource\WebDriver_CowlitzWA.cs" />
+    <Compile Include="Scrapsource\Webdriver_cuyahogaOH.cs" />
+    <Compile Include="Scrapsource\WebDriver_DavidsonTN.cs" />
+    <Compile Include="Scrapsource\Webdriver_DelawareOH.cs" />
+    <Compile Include="Scrapsource\WebDriver_DesotoMS.cs" />
+    <Compile Include="Scrapsource\WebDriver_DonaAnaNM.cs" />
+    <Compile Include="Scrapsource\WebDriver_DorchesterSC.cs" />
+    <Compile Include="Scrapsource\WebDriver_DouglasNE.cs" />
+    <Compile Include="Scrapsource\WebDriver_DouglasNV.cs" />
+    <Compile Include="Scrapsource\Webdriver_DupageIL.cs" />
+    <Compile Include="Scrapsource\WebDriver_ElpasoCO.cs" />
+    <Compile Include="Scrapsource\WebDriver_ElPaso_TX.cs" />
+    <Compile Include="Scrapsource\Webdriver_EscambiaFL.cs" />
+    <Compile Include="Scrapsource\WebDriver_FayetteKy.cs" />
+    <Compile Include="Scrapsource\WebDriver_FLClay.cs" />
+    <Compile Include="Scrapsource\WebDriver_FLFlagler.cs" />
+    <Compile Include="Scrapsource\Webdriver_ForsythGA.cs" />
+    <Compile Include="Scrapsource\WebDriver_ForsythNC.cs" />
+    <Compile Include="Scrapsource\WebDriver_FortBendTX.cs" />
+    <Compile Include="Scrapsource\WebDriver_FrederickMD.cs" />
+    <Compile Include="Scrapsource\WebDriver_GAFayette.cs" />
+    <Compile Include="Scrapsource\WebDriver_GalvestonTX.cs" />
+    <Compile Include="Scrapsource\WebDriver_HawaiiHI.cs" />
+    <Compile Include="Scrapsource\WebDriver_HenryGA.cs" />
+    <Compile Include="Scrapsource\WebDriver_HidalgoTX.cs" />
+    <Compile Include="Scrapsource\WebDriver_HighlandsFL.cs" />
+    <Compile Include="Scrapsource\WebDriver_HonoluluHI.cs" />
+    <Compile Include="Scrapsource\WebDriver_HorrySC.cs" />
+    <Compile Include="Scrapsource\WebDriver_HowardMD.cs" />
+    <Compile Include="Scrapsource\Webdriver_ImperialCA.cs" />
+    <Compile Include="Scrapsource\WebDriver_IndianRiverFL.cs" />
+    <Compile Include="Scrapsource\WebDriver_JacksonMO.cs" />
+    <Compile Include="Scrapsource\WebDriver_JeffersonAL.cs" />
+    <Compile Include="Scrapsource\WebDriver_JeffersonCO.cs" />
+    <Compile Include="Scrapsource\Webdriver_JeffersonKY.cs" />
+    <Compile Include="Scrapsource\WebDriver_JohnsonKS.cs" />
+    <Compile Include="Scrapsource\WebDriver_KanawahWV.cs" />
+    <Compile Include="Scrapsource\WebDriver_KaneIL.cs" />
+    <Compile Include="Scrapsource\Webdriver_KnoxTN.cs" />
+    <Compile Include="Scrapsource\Webdriver_KootenaiID.cs" />
+    <Compile Include="Scrapsource\Webdriver_LakeFL.cs" />
+    <Compile Include="Scrapsource\WebDriver_LakeIL.cs" />
+    <Compile Include="Scrapsource\WebDriver_LakeIN.cs" />
+    <Compile Include="Scrapsource\WebDriver_LakeOH.cs" />
+    <Compile Include="Scrapsource\WebDriver_LancasterNE.cs" />
+    <Compile Include="Scrapsource\WebDriver_LarimerCO.cs" />
+    <Compile Include="Scrapsource\WebDriver_LeeFL.cs" />
+    <Compile Include="Scrapsource\Webdriver_LexingtonSC.cs" />
+    <Compile Include="Scrapsource\WebDriver_LimestoneAL.cs" />
+    <Compile Include="Scrapsource\Webdriver_LorainOH.cs" />
+    <Compile Include="Scrapsource\WebDriver_LubbockTX.cs" />
+    <Compile Include="Scrapsource\WebDriver_LucasOH.cs" />
+    <Compile Include="Scrapsource\webdriver_LyonNV.cs" />
+    <Compile Include="Scrapsource\Webdriver_MaderaCA.cs" />
+    <Compile Include="Scrapsource\WebDriver_MahoningOH.cs" />
+    <Compile Include="Scrapsource\WebDriver_MarinCA.cs" />
+    <Compile Include="Scrapsource\WebDriver_MauiHI.cs" />
+    <Compile Include="Scrapsource\WebDriver_MCHenryIL.cs" />
+    <Compile Include="Scrapsource\WebDriver_McLennanTX.cs" />
+    <Compile Include="Scrapsource\Webdriver_MDWashington.cs" />
+    <Compile Include="Scrapsource\WebDriver_MedinaOH.cs" />
+    <Compile Include="Scrapsource\Webdriver_MercedCA.cs" />
+    <Compile Include="Scrapsource\WebDriver_MobileAL.cs" />
+    <Compile Include="Scrapsource\Webdriver_MohaveAZ.cs" />
+    <Compile Include="Scrapsource\Webdriver_MoJefferson.cs" />
+    <Compile Include="Scrapsource\WebDriver_MontgomeryAL.cs" />
+    <Compile Include="Scrapsource\WebDriver_MontgomeryMD.cs" />
+    <Compile Include="Scrapsource\Webdriver_MontgomeryOH.cs" />
+    <Compile Include="Scrapsource\WebDriver_NapaCA.cs" />
+    <Compile Include="Scrapsource\WebDriver_NCGuilford.cs" />
+    <Compile Include="Scrapsource\WebDriver_NevadaCA.cs" />
+    <Compile Include="Scrapsource\WebDriver_NuecesTX.cs" />
+    <Compile Include="Scrapsource\Webdriver_NYKings.cs" />
+    <Compile Include="Scrapsource\WebDriver_OklahomaOK.cs" />
+    <Compile Include="Scrapsource\WebDriver_ORJackson.cs" />
+    <Compile Include="Scrapsource\WebDriver_PauldingGA.cs" />
+    <Compile Include="Scrapsource\WebDriver_PimaAZ.cs" />
+    <Compile Include="Scrapsource\WebDriver_PinellasFL.cs" />
+    <Compile Include="Scrapsource\Webdriver_QueensNY.cs" />
+    <Compile Include="Scrapsource\WebDriver_RichlandSC.cs" />
+    <Compile Include="Scrapsource\Webdriver_RiversideCA.cs" />
+    <Compile Include="Scrapsource\Webdriver_SalineAR.cs" />
+    <Compile Include="Scrapsource\WebDriver_SandovalNM.cs" />
+    <Compile Include="Scrapsource\WebDriver_SantaCruzCA.cs" />
+    <Compile Include="Scrapsource\Webdriver_SarpyNE.cs" />
+    <Compile Include="Scrapsource\Webdriver_SedgwickKS.cs" />
+    <Compile Include="Scrapsource\WebDriver_SeminoleFL.cs" />
+    <Compile Include="Scrapsource\WebDriver_ShastaCA.cs" />
+    <Compile Include="Scrapsource\WebDriver_ShelbyAL.cs" />
+    <Compile Include="Scrapsource\WebDriver_SolanoCA.cs" />
+    <Compile Include="Scrapsource\Webdriver_SonomaCA.cs" />
+    <Compile Include="Scrapsource\Webdriver_SpartanburgSC.cs" />
+    <Compile Include="Scrapsource\WebDriver_SpokaneWA.cs" />
+    <Compile Include="Scrapsource\Webdriver_St Louis CityMO.cs" />
+    <Compile Include="Scrapsource\Webdriver_StaffordVA.cs" />
+    <Compile Include="Scrapsource\WebDriver_StanislausCA.cs" />
+    <Compile Include="Scrapsource\WebDriver_StJohnsFL.cs" />
+    <Compile Include="Scrapsource\WebDriver_SussexDE.cs" />
+    <Compile Include="Scrapsource\Webdriver_ThrumbullOH.cs" />
+    <Compile Include="Scrapsource\WebDriver_ThurstonWA.cs" />
+    <Compile Include="Scrapsource\WebDriver_TXBrazoria.cs" />
+    <Compile Include="Scrapsource\WebDriver_TXEllis.cs" />
+    <Compile Include="Scrapsource\WebDriver_TXGuadalupe.cs" />
+    <Compile Include="Scrapsource\WebDriver_TXHays.cs" />
+    <Compile Include="Scrapsource\WebDriver_TXTravis.cs" />
+    <Compile Include="Scrapsource\WebDriver_VALoudounl.cs" />
+    <Compile Include="Scrapsource\WebDriver_VenturaCA.cs" />
+    <Compile Include="Scrapsource\Webdriver_WakeNC.cs" />
+    <Compile Include="Scrapsource\Webdriver_WaKing.cs" />
+    <Compile Include="Scrapsource\Webdriver_WAKitsap.cs" />
+    <Compile Include="Scrapsource\WebDriver_WaltonFL.cs" />
+    <Compile Include="Scrapsource\WebDriver_WaltonGA.cs" />
+    <Compile Include="Scrapsource\Webdriver_WashingtonMN.cs" />
+    <Compile Include="Scrapsource\WebDriver_WASnohomish.cs" />
+    <Compile Include="Scrapsource\WebDriver_WayneOH.cs" />
+    <Compile Include="Scrapsource\Webdriver_WeberUT.cs" />
+    <Compile Include="Scrapsource\WebDriver_WeldCO.cs" />
+    <Compile Include="Scrapsource\WebDriver_WilliamsonTX.cs" />
+    <Compile Include="Scrapsource\Webdriver_WoodOH.cs" />
+    <Compile Include="Scrapsource\Webdriver_YamhillOR.cs" />
+    <Compile Include="Scrapsource\Webdriver_YavapaiAZ.cs" />
+    <Compile Include="Scrapsource\WebDriver_YellowstoneMT.cs" />
+    <Compile Include="Scrapsource\WebDriver_YorkSC.cs" />
+    <Compile Include="Stars.aspx.cs">
+      <DependentUpon>Stars.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Stars.aspx.designer.cs">
+      <DependentUpon>Stars.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TaxDetails.aspx.cs">
+      <DependentUpon>TaxDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TaxDetails.aspx.designer.cs">
+      <DependentUpon>TaxDetails.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TaxPages.aspx.cs">
+      <DependentUpon>TaxPages.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TaxPages.aspx.designer.cs">
+      <DependentUpon>TaxPages.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Scrapsource\Webdriver_ALMadison.cs" />
+    <Compile Include="Scrapsource\Webdriver_ARWashington.cs" />
+    <Compile Include="Scrapsource\Webdriver_AZMaricopa.cs" />
+    <Compile Include="Scrapsource\Webdriver_CAAlameda.cs" />
+    <Compile Include="Scrapsource\WebDriver_CAContraCosta.cs" />
+    <Compile Include="Scrapsource\WebDriver_CAEldorado.cs" />
+    <Compile Include="Scrapsource\webdriver_CASacramento.cs" />
+    <Compile Include="Scrapsource\Webdriver_CASantamenta.cs" />
+    <Compile Include="Scrapsource\WebDriver_CAYolo.cs" />
+    <Compile Include="Scrapsource\WebDriver_CherokeeGA.cs" />
+    <Compile Include="Scrapsource\WebDriver_CODenver.cs" />
+    <Compile Include="Scrapsource\WebDriver_DuvalFL.cs" />
+    <Compile Include="Scrapsource\WebDriver_FLBroward.cs" />
+    <Compile Include="Scrapsource\Webdriver_FLCollier.cs" />
+    <Compile Include="Scrapsource\WebDriver_FLHillsborough.cs" />
+    <Compile Include="Scrapsource\WebDriver_FLManatee.cs" />
+    <Compile Include="Scrapsource\WebDriver_FLMiamiDade.cs" />
+    <Compile Include="Scrapsource\WebDriver_FLOrange.cs" />
+    <Compile Include="Scrapsource\WebDriver_FLOsceola.cs" />
+    <Compile Include="Scrapsource\WebDriver_FLPalmBeach.cs" />
+    <Compile Include="Scrapsource\WebDriver_FlPasco.cs" />
+    <Compile Include="Scrapsource\WebDriver_FLPolk.cs" />
+    <Compile Include="Scrapsource\WebDriver_FLStLucie.cs" />
+    <Compile Include="Scrapsource\WebDriver_GAClayton.cs" />
+    <Compile Include="Scrapsource\WebDriver_GANewton.cs" />
+    <Compile Include="Scrapsource\WebDriver_HarfordMD.cs" />
+    <Compile Include="Scrapsource\WebDriver_ILWill.cs" />
+    <Compile Include="Scrapsource\Webdriver_INHamilton.cs" />
+    <Compile Include="Scrapsource\WebDriver_INMarion.cs" />
+    <Compile Include="Scrapsource\Webdriver_MDCarroll.cs" />
+    <Compile Include="Scrapsource\WebDriver_MNAnoka.cs" />
+    <Compile Include="Scrapsource\WebDriver_MNDakota.cs" />
+    <Compile Include="Scrapsource\WebDriver_NVClark.cs" />
+    <Compile Include="Scrapsource\WebDriver_OHHamilton.cs" />
+    <Compile Include="Scrapsource\Webdiver_CAPlacer.cs" />
+    <Compile Include="Scrapsource\WebDriver_ARPinal.cs" />
+    <Compile Include="Scrapsource\WebDriver_CAFresno.cs" />
+    <Compile Include="Scrapsource\WebDriver_CAKern.cs" />
+    <Compile Include="Scrapsource\WebDriver_CAMecklenburg.cs" />
+    <Compile Include="Scrapsource\WebDriver_CAMonterey.cs" />
+    <Compile Include="Scrapsource\WebDriver_CASanJaquin.cs" />
+    <Compile Include="Scrapsource\WebDriver_CASantaBarbara.cs" />
+    <Compile Include="Scrapsource\WebDriver_CODouglas.cs" />
+    <Compile Include="Scrapsource\WebDriver_DCdistofcolumbia.cs" />
+    <Compile Include="Scrapsource\WebDriver_FLSarasota.cs" />
+    <Compile Include="Scrapsource\WebDriver_FLVolusia.cs" />
+    <Compile Include="Scrapsource\Webdriver_GADekalb.cs" />
+    <Compile Include="Scrapsource\WebDriver_GAGwinnet.cs" />
+    <Compile Include="Scrapsource\WebDriver_harrison.cs" />
+    <Compile Include="Scrapsource\WebDriver_IAPolk.cs" />
+    <Compile Include="Scrapsource\Webdriver_LAEastBatonRouge.cs" />
+    <Compile Include="Scrapsource\WebDriver_LAJefferson.cs" />
+    <Compile Include="Scrapsource\WebDriver_MDBaltimore.cs" />
+    <Compile Include="Scrapsource\WebDriver_MNHennepin.cs" />
+    <Compile Include="Scrapsource\WebDriver_MOStCharles.cs" />
+    <Compile Include="Scrapsource\WebDriver_DENewCastle.cs" />
+    <Compile Include="Scrapsource\WebDriver_NMBernalillio.cs" />
+    <Compile Include="Scrapsource\WebDriver_NVWashoe.cs" />
+    <Compile Include="Scrapsource\Webdriver_OHFranklin.cs" />
+    <Compile Include="Scrapsource\WebDriver_OHStark.cs" />
+    <Compile Include="Scrapsource\WebDriver_OHSummit.cs" />
+    <Compile Include="Scrapsource\Webdriver_OKCleveland.cs" />
+    <Compile Include="Scrapsource\WebDriver_OKTulsa.cs" />
+    <Compile Include="Scrapsource\WebDriver_ORClackamas.cs" />
+    <Compile Include="Scrapsource\WebDriver_ORDeschutes.cs" />
+    <Compile Include="Scrapsource\WebDriver_ORMarion.cs" />
+    <Compile Include="Scrapsource\WebDriver_ORMultnomah.cs" />
+    <Compile Include="Scrapsource\Webdriver_SanFrancisco.cs" />
+    <Compile Include="Scrapsource\WebDriver_SanLuisobispoCA.cs" />
+    <Compile Include="Scrapsource\Webdriver_SCBerkeley.cs" />
+    <Compile Include="Scrapsource\WebDriver_SCCharleston.cs" />
+    <Compile Include="Scrapsource\WebDriver_StLouis.cs" />
+    <Compile Include="Scrapsource\WebDriver_TNShelby.cs" />
+    <Compile Include="Scrapsource\WebDriver_UTUtah.cs" />
+    <Compile Include="Scrapsource\Webdriver_wapierce.cs" />
+    <Compile Include="Scrapsource\WebDriverLA.cs" />
+    <Compile Include="Scrapsource\WebDriverTest.cs" />
+    <Compile Include="Scrapsource\Webdriver_river.cs" />
+    <Compile Include="Scrapsource\WebDriver_WYLaramie.cs" />
+    <Compile Include="TaxPagesBulk.aspx.cs">
+      <DependentUpon>TaxPagesBulk.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TaxPagesBulk.aspx.designer.cs">
+      <DependentUpon>TaxPagesBulk.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Test.aspx.cs">
+      <DependentUpon>Test.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Test.aspx.designer.cs">
+      <DependentUpon>Test.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TitleflexConnection.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Backup\Scrapsource\" />
+    <Folder Include="captcha\" />
+    <Folder Include="obj\Debug\TempPE\" />
+    <Folder Include="packages\MergePDF\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\ScrapMaricopa.dll.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <Content Include="obj\Debug\ScrapMaricopa.csprojResolveAssemblyReference.cache" />
+    <Content Include="packages\repositories.config" />
+    <Content Include="packages\Selenium.Support.3.7.0\Selenium.Support.3.7.0.nupkg" />
+    <Content Include="packages\Selenium.WebDriver.3.7.0\Selenium.WebDriver.3.7.0.nupkg" />
+    <Content Include="packages\System.ComponentModel.4.3.0\lib\MonoAndroid10\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\lib\MonoTouch10\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\lib\net45\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\lib\portable-net45+win8+wp8+wpa81\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\lib\win8\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\lib\wp80\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\lib\wpa81\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\lib\xamarinios10\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\lib\xamarinmac20\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\lib\xamarintvos10\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\lib\xamarinwatchos10\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\MonoAndroid10\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\MonoTouch10\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\net45\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\portable-net45+win8+wp8+wpa81\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\win8\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\wp80\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\wpa81\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\xamarinios10\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\xamarinmac20\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\xamarintvos10\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\ref\xamarinwatchos10\_._" />
+    <Content Include="packages\System.ComponentModel.4.3.0\System.ComponentModel.4.3.0.nupkg" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>59361</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

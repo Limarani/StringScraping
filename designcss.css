@@ -1,0 +1,191 @@
+﻿
+		.container-fluid{
+		margin:0px;
+		padding:0px;
+		}
+body{
+/*font-family:'Oxygen', sans-serif;*/
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+font-weight:normal;
+}
+		.navbar-default {
+    background-color: #fff;
+    border-color: #edeaea;
+}
+.navbar-nav img{
+width: 120px;
+}
+.container-fluid {
+    margin: 0px;
+    padding: 0px;
+}
+/*.form-control{
+	width: 63%!important;
+}*/
+.intro{
+display:block!important;	
+}
+
+.heading{
+   
+	cursor: pointer;
+	    margin: 13px;
+	
+}
+
+h2{
+    font-size: 18px;
+    text-decoration: underline;
+	  margin: 0px 0px 15px 0px;
+}
+.navbar-brand {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 15px;
+    text-align: center;
+    margin: auto;
+    font-size: 25px;
+    color:white;
+}
+
+.navbar-toggle {
+    z-index: 3;
+}
+
+.navbar-right {
+    margin: 10px 0px;
+}
+.navbar-left {
+    margin: 0px 0px;
+}
+
+#footer {
+    bottom:-32px;
+    width: 100%;
+    background-color: #ece9e9;
+	text-align:center;
+    position:relative;
+}
+
+.navbar-default
+{
+     background-color: #ece9e9;     
+}
+.footer-block {
+    margin: 10px 0;
+    padding: 5px 0px;
+    color: #fff;
+}
+
+.well {
+    background: #fff;
+}
+
+
+
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+
+.header,
+.marketing,
+.footer {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+
+/* Custom page header */
+
+.header {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+
+/* Make the masthead heading the same height as the navigation */
+
+.header h3 {
+    padding-bottom: 19px;
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 40px;
+}
+
+
+
+.container-narrow > hr {
+    margin: 30px 0;
+}
+
+
+/* Main marketing message and sign up button */
+
+.jumbotron {
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.jumbotron .btn {
+    padding: 14px 24px;
+    font-size: 21px;
+}
+
+
+/* Supporting marketing content */
+
+.marketing {
+    margin: 40px 0;
+}
+
+.marketing p + h4 {
+    margin-top: 28px;
+}
+
+
+/* Responsive: Portrait tablets and up */
+
+
+
+
+.container-narrow > hr {
+  margin: 30px 0;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+  text-align: center;
+  border-bottom: 1px solid #e5e5e5;
+}
+.jumbotron .btn {
+  padding: 14px 24px;
+  font-size: 21px;
+}
+
+/* Supporting marketing content */
+.marketing {
+  margin: 40px 0;
+}
+.marketing p + h4 {
+  margin-top: 28px;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+  /* Remove the padding we set earlier */
+  .header,
+  .marketing,
+  .footer {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  /* Space out the masthead */
+  .header {
+    margin-bottom: 30px;
+  }
+  /* Remove the bottom border on the jumbotron for visual effect */
+  .jumbotron {
+    border-bottom: 0;
+  }
+
+}
+	
