@@ -67,9 +67,16 @@ namespace ScrapMaricopa.Scrapsource
                         titleOwner = ownername;
                         gc.TitleFlexSearch(orderNumber, "", ownername, titleaddress, "FL", "Marion");
 
-                        if (HttpContext.Current.Session["TitleFlex_Search"] != null && HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes")
+                        if ((HttpContext.Current.Session["TitleFlex_Search"] != null && HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes"))
                         {
+                            driver.Quit();
                             return "MultiParcel";
+                        }
+                        else if (HttpContext.Current.Session["titleparcel"].ToString() == "")
+                        {
+                            HttpContext.Current.Session["Nodata_FLMarion"] = "Yes";
+                            driver.Quit();
+                            return "No Data Found";
                         }
                         parcelNumber = HttpContext.Current.Session["titleparcel"].ToString();
                         searchType = "parcel";

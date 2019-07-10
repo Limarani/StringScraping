@@ -58,9 +58,18 @@ namespace ScrapMaricopa.Scrapsource
                     if (searchType == "titleflex")
                     {
                         string Address = "";
+                        if (direction != "")
+                        {
+                            Address = streetno + " " + direction + " " + streetname + " " + streettype + " " + unitnumber;
+                        }
+                        else
+                        {
+                            Address = streetno + " " + streetname + " " + streettype + " " + unitnumber;
+                        }
                         gc.TitleFlexSearch(orderNumber, "", ownernm, Address, "MD", "Anne Arundel");
                         if (HttpContext.Current.Session["TitleFlex_Search"] != null && HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes")
                         {
+                            driver.Quit();
                             return "MultiParcel";
                         }
                         parcelNumber = HttpContext.Current.Session["titleparcel"].ToString().Replace("-", "");
@@ -132,7 +141,7 @@ namespace ScrapMaricopa.Scrapsource
                             {
                                 HttpContext.Current.Session["Zero_AnneArundelMD"] = "Zero";
                                 driver.Quit();
-                                return "No data Found";
+                                return "No Data Found";
                             }
                         }
                         catch { }
@@ -154,6 +163,20 @@ namespace ScrapMaricopa.Scrapsource
                         driver.FindElement(By.Id("MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_StepNavigationTemplateContainerID_btnStepNextButton")).Click();
                         Thread.Sleep(2000);
                     }
+
+                    try
+                    {
+                        //No Data Found
+                        string nodata = driver.FindElement(By.Id("MainContent_MainContent_cphMainContentArea_ucSearchType_lblErr")).Text;
+                        if (nodata.Contains("no records"))
+                        {
+                            HttpContext.Current.Session["Zero_AnneArundelMD"] = "Zero";
+                            driver.Quit();
+                            return "No Data Found";
+                        }
+                    }
+                    catch { }
+
                     string Palcel = driver.FindElement(By.Id("MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_ucDetailsSearch_dlstDetaisSearch_lblDetailsStreetHeader_0")).Text.Trim();
                     string District = gc.Between(Palcel, "District - ", "Subdivision");
                     string Subdivision = gc.Between(Palcel, "Subdivision -", "Account Number -");

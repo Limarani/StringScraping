@@ -66,20 +66,18 @@ namespace ScrapMaricopa.Scrapsource
                     if (searchType == "titleflex")
                     {
                         gc.TitleFlexSearch(orderno, parcelNumber, ownername, Address, "CA", "Sacramento");
-                        if (HttpContext.Current.Session["titleparcel"].ToString() != null)
+                        if ((HttpContext.Current.Session["TitleFlex_Search"] != null && HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes"))
                         {
-                            parcelNumber = HttpContext.Current.Session["titleparcel"].ToString();
+                            driver.Quit();
+                            return "MultiParcel";
                         }
-
-
-                        if (HttpContext.Current.Session["TitleFlex_Search"] != null)
+                        else if (HttpContext.Current.Session["titleparcel"].ToString() == "")
                         {
-                            if (HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes")
-                            {
-                                driver.Quit();
-                                return "MultiParcel";
-                            }
+                            HttpContext.Current.Session["Nodata_CASacramento"] = "Zero";
+                            driver.Quit();
+                            return "No Data Found";
                         }
+                        parcelNumber = HttpContext.Current.Session["titleparcel"].ToString();
 
                         searchType = "parcel";
                     }
@@ -143,11 +141,19 @@ namespace ScrapMaricopa.Scrapsource
                     // assessment details
                     string PropertyAddress = "", City_Zip = "", Jurisdiction = "", CountySupervisorDistrict = "", TaxRateAreaCode = "", ApproxParcelArea = "", Yearbuilt = "";
                     parcelNumber = parcelNumber.Replace("-", "");
-                    gc.CreatePdf(orderno, parcelNumber, "Property", driver, "CA", "Sacramento");
-                    ByVisibleElement(driver.FindElement(By.XPath("//*[@id='AssessorRollPortlet']/h3/a")));
+                    try
+                    {
+                        gc.CreatePdf(orderno, parcelNumber, "Property", driver, "CA", "Sacramento");
+                        ByVisibleElement(driver.FindElement(By.XPath("//*[@id='AssessorRollPortlet']/h3/a")));
+                    }
+                    catch { }
+                    try
+                    {
+                        gc.CreatePdf(orderno, parcelNumber, "Assessment1", driver, "CA", "Sacramento");
+                        ByVisibleElement(driver.FindElement(By.XPath("//*[@id='AssessorPortlet']/h3/a")));
+                    }
+                    catch { }
 
-                    gc.CreatePdf(orderno, parcelNumber, "Assessment1", driver, "CA", "Sacramento");
-                    ByVisibleElement(driver.FindElement(By.XPath("//*[@id='AssessorPortlet']/h3/a")));
 
                     gc.CreatePdf(orderno, parcelNumber, "Assessment2", driver, "CA", "Sacramento");
                     //  gc.CreatePdf(orderno, parcelNumber, "Assessment Details", driver, "CA", "El Dorado");
@@ -157,7 +163,11 @@ namespace ScrapMaricopa.Scrapsource
                     Jurisdiction = driver.FindElement(By.XPath("//*[@id='Jurisdiction']")).Text;
                     TaxRateAreaCode = driver.FindElement(By.XPath("//*[@id='TaxRateAreaCodeLink']")).Text;
                     CountySupervisorDistrict = driver.FindElement(By.XPath("//*[@id='SupervisorDistrictLink']")).Text;
-                    ByVisibleElement(driver.FindElement(By.XPath("//*[@id='EffectiveYearBuiltRow']/td[1]")));
+                    try
+                    {
+                        ByVisibleElement(driver.FindElement(By.XPath("//*[@id='EffectiveYearBuiltRow']/td[1]")));
+                    }
+                    catch { }
                     Thread.Sleep(1000);
                     Yearbuilt = driver.FindElement(By.Id("YearBuilt")).Text;
                    
@@ -198,7 +208,11 @@ namespace ScrapMaricopa.Scrapsource
 
                     driver.Navigate().GoToUrl("https://eproptax.saccounty.net/");
                     Thread.Sleep(5000);
-
+                    try
+                    {
+                        driver.FindElement(By.XPath("//*[@id='parcelLookup']/div[1]/a")).Click();
+                    }
+                    catch { }
                     string Pa1 = "", Pa2 = "", Pa3 = "", Pa4 = "";
 
                     Pa1 = parcelNumber.Substring(0, 3);
@@ -268,7 +282,7 @@ namespace ScrapMaricopa.Scrapsource
                         foreach (IWebElement row in CurrentTaxHistoryTR)
                         {
                             CurrentTaxHistoryTD = row.FindElements(By.TagName("td"));
-                            if (CurrentTaxHistoryTD.Count != 0)
+                            if (CurrentTaxHistoryTD.Count != 0 && row.Text.Trim() !="" && !row.Text.Contains("There is a fee") && CurrentTaxHistoryTD.Count > 2)
                             {
                                 TaxRate = driver.FindElement(By.XPath("//*[@id='taxRateGlobal']/a/span")).Text;
                                 SecuredAnnual = CurrentTaxHistoryTD[0].Text;
@@ -335,13 +349,9 @@ namespace ScrapMaricopa.Scrapsource
                         {
 
                             CurrentTaxHistoryTD1 = row1.FindElements(By.TagName("td"));
-                            if (CurrentTaxHistoryTD1.Count != 0)
+                            if (CurrentTaxHistoryTD1.Count != 0 && CurrentTaxHistoryTD1.Count != 1 && row1.Text.Trim() != "" && !row1.Text.Contains("There is a fee")) 
                             {
                                 listurl.Add(CurrentTaxHistoryTD1[0].Text);
-
-
-
-
 
                             }
 
@@ -361,7 +371,7 @@ namespace ScrapMaricopa.Scrapsource
                             foreach (IWebElement row2 in CurrentPayHistoryTR)
                             {
                                 CurrentPayHistoryTD = row2.FindElements(By.TagName("td"));
-                                if (CurrentPayHistoryTD.Count != 0)
+                                if (CurrentPayHistoryTD.Count != 0 && row2.Text.Trim() !="" && !row2.Text.Contains("There is a fee"))
                                 {
 
                                     // string TaxRate1 = driver.FindElement(By.XPath("//*[@id='taxRateGlobal']/a/span")).Text;
@@ -396,7 +406,7 @@ namespace ScrapMaricopa.Scrapsource
                         {
 
                             CurrentTaxHistoryTD1 = row1.FindElements(By.TagName("td"));
-                            if (CurrentTaxHistoryTD1.Count != 0 && CurrentTaxHistoryTD1.Count != 1)
+                            if (CurrentTaxHistoryTD1.Count != 0 && CurrentTaxHistoryTD1.Count != 1 && row1.Text.Trim() !="" && !row1.Text.Contains("There is a fee"))
                             {
                                 BillNumber = CurrentTaxHistoryTD1[0].Text;
                                 Billtype = CurrentTaxHistoryTD1[1].Text;
@@ -416,12 +426,19 @@ namespace ScrapMaricopa.Scrapsource
 
                     gc.CreatePdf(orderno, parcelNumber, "Tax History", driver, "CA", "Sacramento");
 
+                    try
+                    {
+                        ByVisibleElement(driver.FindElement(By.XPath("//*[@id='navIcons']/li[6]/a")));
+                        gc.CreatePdf(orderno, parcelNumber, "Tax History1", driver, "CA", "Sacramento");
+                    }
+                    catch { }
 
-                    ByVisibleElement(driver.FindElement(By.XPath("//*[@id='navIcons']/li[6]/a")));
-                    gc.CreatePdf(orderno, parcelNumber, "Tax History1", driver, "CA", "Sacramento");
-
-                    ByVisibleElement(driver.FindElement(By.XPath("//*[@id='applicationHost']/div/div/div/div[2]/h3")));
-                    gc.CreatePdf(orderno, parcelNumber, "Tax History2", driver, "CA", "Sacramento");
+                    try
+                    {
+                        ByVisibleElement(driver.FindElement(By.XPath("//*[@id='applicationHost']/div/div/div/div[2]/h3")));
+                        gc.CreatePdf(orderno, parcelNumber, "Tax History2", driver, "CA", "Sacramento");
+                    }
+                    catch { }
                     string BillYear = "", TaxBillNumber = "", BillType = "", PayByDate = "", Amount = "", PaidDate = "";
 
 

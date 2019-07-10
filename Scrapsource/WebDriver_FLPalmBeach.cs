@@ -63,7 +63,14 @@ namespace ScrapMaricopa.Scrapsource
                         gc.TitleFlexSearch(orderNumber, "", "", address, "FL", "Palm Beach");
                         if ((HttpContext.Current.Session["TitleFlex_Search"] != null && HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes"))
                         {
+                            driver.Quit();
                             return "MultiParcel";
+                        }
+                        else if (HttpContext.Current.Session["titleparcel"].ToString() == "")
+                        {
+                            HttpContext.Current.Session["Nodata_FLPalmBeach"] = "Yes";
+                            driver.Quit();
+                            return "No Data Found";
                         }
                         parcelNumber = HttpContext.Current.Session["titleparcel"].ToString();
                         searchType = "parcel";
@@ -202,19 +209,20 @@ namespace ScrapMaricopa.Scrapsource
                         }
                         catch
                         { }
-                        try
-                        {
-                            string Nodata = driver.FindElement(By.Id("MainContent_lblMsg")).Text;
-                            if (Nodata == "No Results matched your search criteria. Please modify your search and try again.")
-                            {
-                                HttpContext.Current.Session["Zero_FLPalmBeach"] = "Zero";
-                                driver.Quit();
-                                return "No Data Found";
-                            }
-                        }
-                        catch
-                        { }
                     }
+                    
+                    try
+                    {
+                        string Nodata = driver.FindElement(By.Id("MainContent_lblMsg")).Text;
+                        if (Nodata == "No Results matched your search criteria. Please modify your search and try again.")
+                        {
+                            HttpContext.Current.Session["Nodata_FLPalmBeach"] = "Yes";
+                            driver.Quit();
+                            return "No Data Found";
+                        }
+                    }
+                    catch
+                    { }
 
                     //Scraped Data
                     Location_Address = driver.FindElement(By.XPath("//*[@id='tdDetail']/table/tbody/tr[2]/td[2]")).Text;

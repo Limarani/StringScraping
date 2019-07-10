@@ -59,10 +59,16 @@ namespace ScrapMaricopa.Scrapsource
                     {
 
                         gc.TitleFlexSearch(orderNumber, parcelNumber, "", address, "CO", "Denver");
-
-                        if (HttpContext.Current.Session["TitleFlex_Search"] != null && HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes")
+                        if ((HttpContext.Current.Session["TitleFlex_Search"] != null && HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes"))
                         {
+                            driver.Quit();
                             return "MultiParcel";
+                        }
+                        else if (HttpContext.Current.Session["titleparcel"].ToString() == "")
+                        {
+                            HttpContext.Current.Session["Nodata_CODenver"] = "Zero";
+                            driver.Quit();
+                            return "No Data Found";
                         }
                         parcelNumber = HttpContext.Current.Session["titleparcel"].ToString();
                         searchType = "parcel";
@@ -75,38 +81,42 @@ namespace ScrapMaricopa.Scrapsource
                         gc.CreatePdf_WOP(orderNumber, "Address search", driver, "CO", "Denver");
                         driver.FindElement(By.Id("btnSearch")).Click();
                         Thread.Sleep(3000);
-                        int iRowsCount = driver.FindElements(By.XPath("//*[@id='results_table']/tbody/tr")).Count;
-
-                        gc.CreatePdf_WOP(orderNumber, "Address search result", driver, "CO", "Denver");
-
-                        if (iRowsCount >= 3)
+                        try
                         {
-                            //multi parcel
-                            IWebElement tbmulti2 = driver.FindElement(By.XPath("//*[@id='results_table']/tbody"));
-                            IList<IWebElement> TRmulti2 = tbmulti2.FindElements(By.TagName("tr"));
-                            IList<IWebElement> TDmulti2;
-                            foreach (IWebElement row in TRmulti2)
+                            int iRowsCount = driver.FindElements(By.XPath("//*[@id='results_table']/tbody/tr")).Count;
+
+                            gc.CreatePdf_WOP(orderNumber, "Address search result", driver, "CO", "Denver");
+
+                            if (iRowsCount >= 3)
                             {
-                                TDmulti2 = row.FindElements(By.TagName("td"));
-                                if (TDmulti2.Count != 0)
+                                //multi parcel
+                                IWebElement tbmulti2 = driver.FindElement(By.XPath("//*[@id='results_table']/tbody"));
+                                IList<IWebElement> TRmulti2 = tbmulti2.FindElements(By.TagName("tr"));
+                                IList<IWebElement> TDmulti2;
+                                foreach (IWebElement row in TRmulti2)
                                 {
-                                    string multi1 = TDmulti2[0].Text + "~" + TDmulti2[2].Text;
-                                    gc.insert_date(orderNumber, TDmulti2[1].Text, 316, multi1, 1, DateTime.Now);
-                                    //  address~Owner
+                                    TDmulti2 = row.FindElements(By.TagName("td"));
+                                    if (TDmulti2.Count != 0)
+                                    {
+                                        string multi1 = TDmulti2[0].Text + "~" + TDmulti2[2].Text;
+                                        gc.insert_date(orderNumber, TDmulti2[1].Text, 316, multi1, 1, DateTime.Now);
+                                        //  address~Owner
+                                    }
                                 }
+                                HttpContext.Current.Session["multiParcel_Denver"] = "Yes";
+
+                                driver.Quit();
+                                return "MultiParcel";
                             }
-                            HttpContext.Current.Session["multiParcel_Denver"] = "Yes";
+                            else
+                            {
 
-                            driver.Quit();
-                            return "MultiParcel";
+                                driver.FindElement(By.XPath("//*[@id='results_table']/tbody/tr[2]/td[1]/a")).Click();
+                                Thread.Sleep(3000);
+
+                            }
                         }
-                        else
-                        {
-
-                            driver.FindElement(By.XPath("//*[@id='results_table']/tbody/tr[2]/td[1]/a")).Click();
-                            Thread.Sleep(3000);
-
-                        }
+                        catch { }
                     }
                     else if (searchType == "parcel")
                     {
@@ -118,38 +128,52 @@ namespace ScrapMaricopa.Scrapsource
                         gc.CreatePdf(orderNumber, parcelNumber, "Parcel search", driver, "CO", "Denver");
                         driver.FindElement(By.Id("btnSearch")).Click();
                         Thread.Sleep(3000);
-                        int iRowsCount = driver.FindElements(By.XPath("//*[@id='results_table']/tbody/tr")).Count;
-
-
-                        gc.CreatePdf(orderNumber, parcelNumber, "Parcel search result", driver, "CO", "Denver");
-                        if (iRowsCount >= 3)
+                        try
                         {
-                            //multi parcel
-                            IWebElement tbmulti1 = driver.FindElement(By.XPath("//*[@id='results_table']/tbody"));
-                            IList<IWebElement> TRmulti1 = tbmulti1.FindElements(By.TagName("tr"));
-                            IList<IWebElement> TDmulti1;
-                            foreach (IWebElement row in TRmulti1)
+                            int iRowsCount = driver.FindElements(By.XPath("//*[@id='results_table']/tbody/tr")).Count;
+
+
+                            gc.CreatePdf(orderNumber, parcelNumber, "Parcel search result", driver, "CO", "Denver");
+                            if (iRowsCount >= 3)
                             {
-                                TDmulti1 = row.FindElements(By.TagName("td"));
-                                if (TDmulti1.Count != 0)
+                                //multi parcel
+                                IWebElement tbmulti1 = driver.FindElement(By.XPath("//*[@id='results_table']/tbody"));
+                                IList<IWebElement> TRmulti1 = tbmulti1.FindElements(By.TagName("tr"));
+                                IList<IWebElement> TDmulti1;
+                                foreach (IWebElement row in TRmulti1)
                                 {
-                                    string multi1 = TDmulti1[0].Text + "~" + TDmulti1[2].Text;
-                                    gc.insert_date(orderNumber, TDmulti1[1].Text, 316, multi1, 1, DateTime.Now);
+                                    TDmulti1 = row.FindElements(By.TagName("td"));
+                                    if (TDmulti1.Count != 0)
+                                    {
+                                        string multi1 = TDmulti1[0].Text + "~" + TDmulti1[2].Text;
+                                        gc.insert_date(orderNumber, TDmulti1[1].Text, 316, multi1, 1, DateTime.Now);
+                                    }
                                 }
+                                HttpContext.Current.Session["multiParcel_Denver"] = "Yes";
+                                driver.Quit();
+                                return "MultiParcel";
                             }
-                            HttpContext.Current.Session["multiParcel_Denver"] = "Yes";
-                            driver.Quit();
-                            return "MultiParcel";
+                            else
+                            {
+
+                                driver.FindElement(By.XPath("//*[@id='results_table']/tbody/tr[2]/td[1]/a")).Click();
+                                Thread.Sleep(3000);
+
+                            }
                         }
-                        else
+                        catch { }
+                    }
+                    try
+                    {
+                        IWebElement INodata = driver.FindElement(By.Id("no_results_div"));
+                        if(INodata.Text.Contains("No properties found"))
                         {
-
-                            driver.FindElement(By.XPath("//*[@id='results_table']/tbody/tr[2]/td[1]/a")).Click();
-                            Thread.Sleep(3000);
-
+                            HttpContext.Current.Session["Nodata_CODenver"] = "Zero";
+                            driver.Quit();
+                            return "No Data Found";
                         }
                     }
-
+                    catch { }
                     //property details
 
                     string owner_Address = "", parcel_no = "", Legal_desc = "", Property_type = "", Tax_district = "", Year_built = "";

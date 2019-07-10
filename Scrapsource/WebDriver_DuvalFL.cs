@@ -57,8 +57,16 @@ namespace ScrapMaricopa.Scrapsource
                         gc.TitleFlexSearch(orderNumber, "", "", titleaddress, "FL", "Duval");
                         if ((HttpContext.Current.Session["TitleFlex_Search"] != null && HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes"))
                         {
+                            driver.Quit();
                             return "MultiParcel";
                         }
+                        else if (HttpContext.Current.Session["titleparcel"].ToString() == "")
+                        {
+                            HttpContext.Current.Session["Nodata_DuvalFL"] = "Zero";
+                            driver.Quit();
+                            return "No Data Found";
+                        }
+                        parcelNumber = HttpContext.Current.Session["titleparcel"].ToString();
                         searchType = "parcel";
                     }
                     if (searchType == "address")
@@ -79,6 +87,18 @@ namespace ScrapMaricopa.Scrapsource
                             driver.Quit();
                             return "MultiParcel";
                         }
+
+                        try
+                        {
+                            string nodata = driver.FindElement(By.XPath("//*[@id='noResults']/h3")).Text;
+                            if (nodata.Contains("No Results Found"))
+                            {
+                                HttpContext.Current.Session["Nodata_DuvalFL"] = "Zero";
+                                driver.Quit();
+                                return "No Data Found";
+                            }
+                        }
+                        catch { }
 
                     }
 
@@ -120,6 +140,17 @@ namespace ScrapMaricopa.Scrapsource
                                 driver.Quit();
                                 return "MultiParcel";
                             }
+                            try
+                            {
+                                string nodata = driver.FindElement(By.XPath("//*[@id='noResults']/h3")).Text;
+                                if (nodata.Contains("No Results Found"))
+                                {
+                                    HttpContext.Current.Session["Nodata_DuvalFL"] = "Zero";
+                                    driver.Quit();
+                                    return "No Data Found";
+                                }
+                            }
+                            catch { }
 
                         }
                     }
@@ -140,6 +171,18 @@ namespace ScrapMaricopa.Scrapsource
                             driver.Quit();
                             return "MultiParcel";
                         }
+                        try
+                        {
+                            string nodata = driver.FindElement(By.XPath("//*[@id='noResults']/h3")).Text;
+                            if (nodata.Contains("No Results Found"))
+                            {
+                                HttpContext.Current.Session["Nodata_DuvalFL"] = "Zero";
+                                driver.Quit();
+                                return "No Data Found";
+
+                            }
+                        }
+                        catch { }
 
                     }
 

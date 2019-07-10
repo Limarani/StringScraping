@@ -59,9 +59,16 @@ namespace ScrapMaricopa.Scrapsource
                     if (searchType == "titleflex")
                     {
                         gc.TitleFlexSearch(orderNumber, parcelNumber, ownername, "", "CA", "Santa Clara");
-                        if (HttpContext.Current.Session["TitleFlex_Search"] != null && HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes")
+                        if ((HttpContext.Current.Session["TitleFlex_Search"] != null && HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes"))
                         {
+                            driver.Quit();
                             return "MultiParcel";
+                        }
+                        else if (HttpContext.Current.Session["titleparcel"].ToString() == "")
+                        {
+                            HttpContext.Current.Session["Nodata_CASantaClara"] = "Zero";
+                            driver.Quit();
+                            return "No Data Found";
                         }
                         parcelNumber = HttpContext.Current.Session["titleparcel"].ToString();
                         searchType = "parcel";
@@ -131,7 +138,19 @@ namespace ScrapMaricopa.Scrapsource
                             string nodata = driver.FindElement(By.XPath("//*[@id='ContentMasterPage_lblError']/div")).Text;
                             if (nodata.Contains("No records meet your search criteria:"))
                             {
-                                HttpContext.Current.Session["Nodata_SantaClaraCA"] = "Yes";
+                                HttpContext.Current.Session["Nodata_CASantaClara"] = "Zero";
+                                driver.Quit();
+                                return "No Data Found";
+                            }
+                        }
+                        catch { }
+                        try
+                        {
+                            //No Data Found
+                            string nodata = driver.FindElement(By.XPath("//*[@id='ui-id-1']")).Text;
+                            if (nodata.Contains("No Such Address"))
+                            {
+                                HttpContext.Current.Session["Nodata_CASantaClara"] = "Zero";
                                 driver.Quit();
                                 return "No Data Found";
                             }
@@ -163,7 +182,7 @@ namespace ScrapMaricopa.Scrapsource
                                 string nodata = driver.FindElement(By.XPath("//*[@id='ContentMasterPage_lblError']/div")).Text;
                                 if (nodata.Contains("No records meet your search criteria:"))
                                 {
-                                    HttpContext.Current.Session["Nodata_SantaClaraCA"] = "Yes";
+                                    HttpContext.Current.Session["Nodata_CASantaClara"] = "Zero";
                                     driver.Quit();
                                     return "No Data Found";
                                 }
@@ -442,9 +461,13 @@ namespace ScrapMaricopa.Scrapsource
                                 }
                                 InstallmentSupplemnt1 = tax_type_Supp + "~" + InstallmentSupplemnt1.Remove(InstallmentSupplemnt1.Length - 1, 1);
                                 m++;
-                                ByVisibleElement(driver.FindElement(By.XPath("//*[@id='select_invoiceslist']/div[3]/div[3]/div[1]/div[2]")));
-                                gc.CreatePdf(orderNumber, parcelno, "Supplemental Tax Details1", driver, "CA", "Santa Clara");
-                                Thread.Sleep(2000);
+                                try
+                                {
+                                    ByVisibleElement(driver.FindElement(By.XPath("//*[@id='select_invoiceslist']/div[3]/div[3]/div[1]/div[2]")));
+                                    gc.CreatePdf(orderNumber, parcelno, "Supplemental Tax Details1", driver, "CA", "Santa Clara");
+                                    Thread.Sleep(2000);
+                                }
+                                catch { }
                                 gc.insert_date(orderNumber, parcelno, 546, InstallmentSupplemnt1, 1, DateTime.Now);
                                 InstallmentSupplemnt1 = "";
                             }

@@ -76,6 +76,24 @@ namespace ScrapMaricopa {
         protected global::System.Web.UI.WebControls.DropDownList dropCounty;
         
         /// <summary>
+        /// labelTown control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label labelTown;
+        
+        /// <summary>
+        /// dropTownship control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList dropTownship;
+        
+        /// <summary>
         /// hdnField1 control.
         /// </summary>
         /// <remarks>

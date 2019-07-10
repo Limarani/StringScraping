@@ -130,14 +130,19 @@
 
                     <div class="col-sm-12">
                         <div class="row">
-                            <div class="col-sm-6 form-group form-inline" style="left: 310px;">
+                           <div class="col-sm-4 form-group form-inline" style="left: 134px;">
                                 <label>State: </label>
                                 <asp:DropDownList class="form-control" runat="server" ID="dropState" AutoPostBack="true" Style="width: 170px" OnSelectedIndexChanged="dropState_SelectedIndexChanged">
                                 </asp:DropDownList>
                             </div>
-                            <div class="col-sm-6 form-group form-inline">
+                            <div class="col-sm-4 form-group form-inline">
                                 <label>County:</label>
                                 <asp:DropDownList class="form-control" runat="server" ID="dropCounty" AutoPostBack="true" Style="width: 170px" OnSelectedIndexChanged="dropCounty_SelectedIndexChanged">
+                                </asp:DropDownList>
+                            </div>
+                             <div class="col-sm-4 form-group form-inline">
+                                <asp:label runat="server" Visible ="false" id="labelTown">Township:</asp:label>
+                                <asp:DropDownList class="form-control" runat="server" ID="dropTownship" AutoPostBack="true" Style="width: 170px" Visible="False">
                                 </asp:DropDownList>
                             </div>
                             <div class="col-sm-6 form-group form-inline">

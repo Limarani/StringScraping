@@ -46,21 +46,38 @@ namespace ScrapMaricopa.Scrapsource
             string TaxAuthority1 = "";
             List<string> listurl = new List<string>();
             TaxAuthority1 = "301 West Jefferson Ste 100 Phoenix, Arizona 85003 (602) 506-8511";
+            string newaddr = "";
+            if (Address.ToUpper().Contains("UNIT") || Address.ToUpper().Contains("APT"))
+            {
+              newaddr =  Address.ToUpper().Replace("UNIT ", "#").Replace("APT ", "#");
+            }
+            else
+            {
+                newaddr = Address.ToUpper();
+            }
+
             using (driver = new PhantomJSDriver())
 
             {
                 try
                 {
                     StartTime = DateTime.Now.ToString("HH:mm:ss");
-
+                    
                     if (searchType == "titleflex")
                     {
 
                         gc.TitleFlexSearch(orderNumber, parcelNumber, "", Address, "AZ", "Maricopa");
 
-                        if (HttpContext.Current.Session["TitleFlex_Search"] != null && HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes")
+                        if ((HttpContext.Current.Session["TitleFlex_Search"] != null && HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes"))
                         {
+                            driver.Quit();
                             return "MultiParcel";
+                        }
+                        else if (HttpContext.Current.Session["titleparcel"].ToString() == "")
+                        {
+                            HttpContext.Current.Session["Zero_Maricopa"] = "Zero";
+                            driver.Quit();
+                            return "No Data Found";
                         }
                         parcelNumber = HttpContext.Current.Session["titleparcel"].ToString();
                         searchType = "parcel";
@@ -72,7 +89,7 @@ namespace ScrapMaricopa.Scrapsource
                         driver.Navigate().GoToUrl("https://mcassessor.maricopa.gov/");
                         Thread.Sleep(2000);
 
-                        driver.FindElement(By.XPath("/html/body/div[1]/div[3]/div/form/div[2]/input")).SendKeys(Address.ToUpper());
+                        driver.FindElement(By.XPath("/html/body/div[1]/div[3]/div/form/div[2]/input")).SendKeys(newaddr.ToUpper());
 
                         gc.CreatePdf_WOP(orderNumber, "Address search", driver, "AZ", "Maricopa");
                       //  /html/body/div[1]/div[3]/div/form/div[2]/button
@@ -91,13 +108,14 @@ namespace ScrapMaricopa.Scrapsource
                             if (Convert.ToInt32(multiCount) > 25)
                             {
                                 HttpContext.Current.Session["multiParcel_Maricopa_Count"] = "Maximum";
+                                driver.Quit();
                                 return "Maximum";
                             }
                         }
                         catch { }
                         try
                         {
-                            string Nodata = driver.FindElement(By.Id("//*[@id='search-results-output']/div")).Text;
+                            string Nodata = driver.FindElement(By.XPath("//*[@id='search-results-output']/div")).Text;
                             if (Nodata.Contains("We found 0 results"))
                             {
                                 HttpContext.Current.Session["Zero_Maricopa"] = "Zero";
@@ -124,7 +142,7 @@ namespace ScrapMaricopa.Scrapsource
                                     MultiOwnerTD = row1.FindElements(By.TagName("td"));
                                     if (MultiOwnerTD.Count != 0 && MultiOwnerTD.Count != 2 && MultiOwnerTD.Count != 1)
                                     {
-                                        if (MultiOwnerTD[2].Text.Contains(Address.ToUpper()))
+                                        if (MultiOwnerTD[2].Text.Contains(newaddr.ToUpper()))
                                         {
                                             A++;
 
@@ -197,6 +215,7 @@ namespace ScrapMaricopa.Scrapsource
                             if (Convert.ToInt32(multiCount) > 25)
                             {
                                 HttpContext.Current.Session["multiParcel_Maricopa_Count"] = "Maximum";
+                                driver.Quit();
                                 return "Maximum";
                             }
                         }
@@ -238,8 +257,19 @@ namespace ScrapMaricopa.Scrapsource
                         }
                         catch { }
                     }
+                    try
+                    {
+                        string Nodata = driver.FindElement(By.XPath("//*[@id='search-results-output']/div")).Text;
+                        if (Nodata.Contains("We found 0 results"))
+                        {
+                            HttpContext.Current.Session["Zero_Maricopa"] = "Zero";
+                            driver.Quit();
+                            return "No Data Found";
+                        }
+                    }
+                    catch { }
 
-                    
+
                     string MCR = "", Description = "", HighSchoolDistrict = "", ElementarySchoolDistrict = "", LocalJurisdiction = "", STR = "", Subdivision = "", ConstructionYear = "";
 
                     parcelNumber = driver.FindElement(By.XPath("//*[@id='header']/div[1]/table/tbody/tr/td[1]/h3")).Text;

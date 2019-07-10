@@ -72,24 +72,18 @@ namespace ScrapMaricopa.Scrapsource
                         gc.TitleFlexSearch(orderNumber, "", "", titleaddress, "FL", "Hillsborough");
                         if ((HttpContext.Current.Session["TitleFlex_Search"] != null && HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes"))
                         {
+                            driver.Quit();
                             return "MultiParcel";
                         }
+                        else if (HttpContext.Current.Session["titleparcel"].ToString() == "")
+                        {
+                            HttpContext.Current.Session["Zero_Hillsborough"] = "Zero";
+                            driver.Quit();
+                            return "No Data Found";
+                        }
                         searchType = "block";
-                        if ((HttpContext.Current.Session["TitleFlex_Search"] != null && HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes"))
-                        {
-                            parcelNumber = HttpContext.Current.Session["titleparcel"].ToString();
-
-                        }
-                        if (GlobalClass.titleparcel.Contains(".") || GlobalClass.titleparcel.Contains("-"))
-                        {
-                            parcelNumber = GlobalClass.titleparcel.Replace(".", "").Replace("-", "");
-                        }
-
-                        if (parcelNumber.Contains("-"))
-                        {
-                            parcelNumber = parcelNumber.Replace("-", "");
-                        }
-                        unitno = parcelNumber;
+                        parcelNumber = HttpContext.Current.Session["titleparcel"].ToString();
+                        unitno = parcelNumber.Replace(".", "").Replace("-", ""); ;
                     }
                     string address = "";
                     if (searchType == "address")
@@ -119,7 +113,8 @@ namespace ScrapMaricopa.Scrapsource
 
                         }
                         catch { }
-                        string mul = driver.FindElement(By.XPath("//*[@id='results']/div[2]/div[1]/div/div[1]/div")).Text;
+                        Thread.Sleep(3000);
+                        string mul = driver.FindElement(By.XPath("//*[@id='results']/div[2]/div[1]/div/div[1]/div")).GetAttribute("innerText");
                         mul = WebDriverTest.After(mul, "Total Records:").Trim();
                         if ((mul != "1") && (mul != "0") && (mul != ""))
                         {   //multi parcel
@@ -138,8 +133,8 @@ namespace ScrapMaricopa.Scrapsource
                                     }
                                     k++;
                                 }
-                                string multi1 = TDmulti2[1].Text + "~" + TDmulti2[2].Text;
-                                gc.insert_date(orderNumber, TDmulti2[0].Text, 325, multi1, 1, DateTime.Now);
+                                string multi1 = TDmulti2[1].GetAttribute("innerText") + "~" + TDmulti2[2].GetAttribute("innerText");
+                                gc.insert_date(orderNumber, TDmulti2[0].GetAttribute("innerText"), 325, multi1, 1, DateTime.Now);
                             }
                             if (k == 1)
                             {
@@ -160,7 +155,7 @@ namespace ScrapMaricopa.Scrapsource
                             }
 
                         }
-                        else
+                        
                         {
                             driver.FindElement(By.XPath("//*[@id='table-basic-results']/tbody/tr")).Click();
                             Thread.Sleep(3000);
@@ -192,8 +187,8 @@ namespace ScrapMaricopa.Scrapsource
                                     TDmulti2 = row.FindElements(By.TagName("td"));
                                     if (TDmulti2.Count != 0 && TDmulti2[1].Text.Trim() != "")
                                     {
-                                        string multi1 = TDmulti2[1].Text + "~" + TDmulti2[2].Text;
-                                        gc.insert_date(orderNumber, TDmulti2[0].Text, 325, multi1, 1, DateTime.Now);
+                                        string multi1 = TDmulti2[1].GetAttribute("innerText") + "~" + TDmulti2[2].GetAttribute("innerText");
+                                        gc.insert_date(orderNumber, TDmulti2[0].GetAttribute("innerText"), 325, multi1, 1, DateTime.Now);
                                         //  Owner~address
                                     }
                                     k++;
@@ -209,9 +204,25 @@ namespace ScrapMaricopa.Scrapsource
                         }
                         else
                         {
-                            driver.FindElement(By.XPath("//*[@id='table-basic-results']/tbody/tr")).Click();
-                            Thread.Sleep(3000);
+                            try
+                            {
+                                driver.FindElement(By.XPath("//*[@id='table-basic-results']/tbody/tr")).Click();
+                                Thread.Sleep(3000);
+                            }
+                            catch { }
                         }
+                        try
+                        {
+                            string Nodata = driver.FindElement(By.XPath("//*[@id='h-no-results']")).Text;
+                            if (Nodata.Contains("No search results"))
+                            {
+                                HttpContext.Current.Session["Zero_Hillsborough"] = "Zero";
+                                driver.Quit();
+                                return "No Data Found";
+                            }
+
+                        }
+                        catch { }
                     }
                     if (searchType == "block")
                     {
@@ -221,8 +232,8 @@ namespace ScrapMaricopa.Scrapsource
                         driver.FindElement(By.XPath("//*[@id='basic']/button[1]")).Click();
                         Thread.Sleep(3000);
                         gc.CreatePdf_WOP(orderNumber, "folio Search result", driver, "FL", "Hillsborough");
-
-                        string mul = driver.FindElement(By.XPath("//*[@id='results']/div[2]/b[1]")).Text;
+                        
+                        string mul = driver.FindElement(By.XPath("//*[@id='results']/div[2]/div[1]/div/div[1]/div")).GetAttribute("innerText");
                         mul = WebDriverTest.After(mul, "Total Records:").Trim();
                         if ((mul != "1") && (mul != "0") && (mul != ""))
                         {   //multi parcel
@@ -237,8 +248,8 @@ namespace ScrapMaricopa.Scrapsource
                                     TDmulti2 = row.FindElements(By.TagName("td"));
                                     if (TDmulti2.Count != 0 && TDmulti2[1].Text.Trim() != "")
                                     {
-                                        string multi1 = TDmulti2[1].Text + "~" + TDmulti2[2].Text;
-                                        gc.insert_date(orderNumber, TDmulti2[0].Text, 325, multi1, 1, DateTime.Now);
+                                        string multi1 = TDmulti2[1].GetAttribute("innerText") + "~" + TDmulti2[2].GetAttribute("innerText");
+                                        gc.insert_date(orderNumber, TDmulti2[0].GetAttribute("innerText"), 325, multi1, 1, DateTime.Now);
                                         //  Owner~address
                                     }
                                     k++;
@@ -258,10 +269,25 @@ namespace ScrapMaricopa.Scrapsource
                         }
                         else
                         {
-                            driver.FindElement(By.XPath("//*[@id='table-basic-results']/tbody/tr")).Click();
-                            Thread.Sleep(3000);
+                            try
+                            {
+                                driver.FindElement(By.XPath("//*[@id='table-basic-results']/tbody/tr")).Click();
+                                Thread.Sleep(3000);
+                            }
+                            catch { }
                         }
+                        try
+                        {
+                            string Nodata = driver.FindElement(By.XPath("//*[@id='h-no-results']")).Text;
+                            if (Nodata.Contains("No search results"))
+                            {
+                                HttpContext.Current.Session["Zero_Hillsborough"] = "Zero";
+                                driver.Quit();
+                                return "No Data Found";
+                            }
 
+                        }
+                        catch { }
 
                     }
                     if (searchType == "ownername")
@@ -319,25 +345,25 @@ namespace ScrapMaricopa.Scrapsource
                     catch { }
                     try
                     {
-                        owner = driver.FindElement(By.XPath("//*[@id='details']/div[3]/div[2]/p[1]")).Text.Trim();
+                        owner = driver.FindElement(By.XPath("//*[@id='details']/div[3]/div[2]/p[1]")).GetAttribute("innerText").Trim();
                         owner = owner.Replace("\r\n", " & ");
-                        situs_address = driver.FindElement(By.XPath("//*[@id='details']/div[3]/div[2]/p[3]")).Text.Trim();
+                        situs_address = driver.FindElement(By.XPath("//*[@id='details']/div[3]/div[2]/p[3]")).GetAttribute("innerText").Trim();
                     }
                     catch { }
-                    pin = driver.FindElement(By.XPath("//*[@id='details']/div[3]/div[2]/table/tbody/tr[1]/td[2]")).Text.Trim();
-                    folio_parcel_no = driver.FindElement(By.XPath("//*[@id='details']/div[3]/div[2]/table/tbody")).Text.Trim();
+                    pin = driver.FindElement(By.XPath("//*[@id='details']/div[3]/div[2]/table/tbody/tr[1]/td[2]")).GetAttribute("innerText").Trim();
+                    folio_parcel_no = driver.FindElement(By.XPath("//*[@id='details']/div[3]/div[2]/table/tbody")).GetAttribute("innerText").Trim();
                     folio_parcel_no = gc.Between(folio_parcel_no, "Folio:", "Prior PIN:").Trim();
                     folio_parcel_no = folio_parcel_no.Replace(" ", "").Replace("-", "");
                     // gc.CreatePdf(orderNumber, folio_parcel_no, "Property Search", driver, "FL", "Hillsborough");
 
                     string parcelnew = folio_parcel_no.TrimStart('0');
-                    Tax_district = driver.FindElement(By.XPath(" //*[@id='details']/div[3]/div[2]/table/tbody/tr[5]/td[2]")).Text.Trim();
-                    property_use = driver.FindElement(By.XPath(" //*[@id='details']/div[3]/div[2]/table/tbody/tr[6]/td[2]")).Text.Trim();
-                    Neighbourhood = driver.FindElement(By.XPath("//*[@id='details']/div[3]/div[2]/table/tbody/tr[8]/td[2]")).Text.Trim();
-                    subdivision = driver.FindElement(By.XPath("//*[@id='details']/div[3]/div[2]/table/tbody/tr[9]/td[2]")).Text.Trim();
+                    Tax_district = driver.FindElement(By.XPath(" //*[@id='details']/div[3]/div[2]/table/tbody/tr[5]/td[2]")).GetAttribute("innerText").Trim();
+                    property_use = driver.FindElement(By.XPath(" //*[@id='details']/div[3]/div[2]/table/tbody/tr[6]/td[2]")).GetAttribute("innerText").Trim();
+                    Neighbourhood = driver.FindElement(By.XPath("//*[@id='details']/div[3]/div[2]/table/tbody/tr[8]/td[2]")).GetAttribute("innerText").Trim();
+                    subdivision = driver.FindElement(By.XPath("//*[@id='details']/div[3]/div[2]/table/tbody/tr[9]/td[2]")).GetAttribute("innerText").Trim();
                     try
                     {
-                        Year_built = driver.FindElement(By.XPath(" //*[@id='details']/div[8]/div[4]/table[1]/tbody/tr[2]/td[2]")).Text.Trim();
+                        Year_built = driver.FindElement(By.XPath(" //*[@id='details']/div[8]/div[4]/table[1]/tbody/tr[2]/td[2]")).GetAttribute("innerText").Trim();
                     }
                     catch
                     { }
@@ -345,14 +371,14 @@ namespace ScrapMaricopa.Scrapsource
                     {
                         if (Year_built == "")
                         {
-                            Year_built = driver.FindElement(By.XPath("//*[@id='details']/div[8]/div[8]/table[1]/tbody/tr[2]/td[2]")).Text.Trim();
+                            Year_built = driver.FindElement(By.XPath("//*[@id='details']/div[8]/div[8]/table[1]/tbody/tr[2]/td[2]")).GetAttribute("innerText").Trim();
                         }
                     }
 
                     catch { }
 
 
-                    Legal_desc = driver.FindElement(By.XPath("//*[@id='details']/div[12]/div[2]/table/tbody/tr/td[2]")).Text.Trim();
+                    Legal_desc = driver.FindElement(By.XPath("//*[@id='details']/div[12]/div[2]/table/tbody/tr/td[2]")).GetAttribute("innerText").Trim();
                     string property_details = owner + "~" + situs_address + "~" + pin + "~" + Tax_district + "~" + property_use + "~" + Neighbourhood + "~" + subdivision + "~" + Year_built + "~" + Legal_desc;
                     gc.insert_date(orderNumber, folio_parcel_no, 322, property_details, 1, DateTime.Now);
                     //     owner~situs_address~pin~Tax_district~property_use~Neighbourhood~subdivision~Year_built~Legal_desc
@@ -392,33 +418,33 @@ namespace ScrapMaricopa.Scrapsource
                             if (i == 0)
                             {
 
-                                County_marketValue.Add(valuerowTD[1].Text);
-                                County_AssessedValue.Add(valuerowTD[2].Text);
-                                County_Exemptions.Add(valuerowTD[3].Text);
-                                County_TaxableValue.Add(valuerowTD[4].Text);
+                                County_marketValue.Add(valuerowTD[1].GetAttribute("innerText"));
+                                County_AssessedValue.Add(valuerowTD[2].GetAttribute("innerText"));
+                                County_Exemptions.Add(valuerowTD[3].GetAttribute("innerText"));
+                                County_TaxableValue.Add(valuerowTD[4].GetAttribute("innerText"));
 
                             }
                             else if (i == 1)
                             {
-                                PublicSchools_marketValue.Add(valuerowTD[1].Text);
-                                PublicSchools_AssessedValue.Add(valuerowTD[2].Text);
-                                PublicSchools_Exemptions.Add(valuerowTD[3].Text);
-                                PublicSchools_TaxableValue.Add(valuerowTD[4].Text);
+                                PublicSchools_marketValue.Add(valuerowTD[1].GetAttribute("innerText"));
+                                PublicSchools_AssessedValue.Add(valuerowTD[2].GetAttribute("innerText"));
+                                PublicSchools_Exemptions.Add(valuerowTD[3].GetAttribute("innerText"));
+                                PublicSchools_TaxableValue.Add(valuerowTD[4].GetAttribute("innerText"));
                             }
 
                             else if (i == 2)
                             {
-                                Municipal_marketValue.Add(valuerowTD[1].Text);
-                                Municipal_AssessedValue.Add(valuerowTD[2].Text);
-                                Municipal_Exemptions.Add(valuerowTD[3].Text);
-                                Municipal_TaxableValue.Add(valuerowTD[4].Text);
+                                Municipal_marketValue.Add(valuerowTD[1].GetAttribute("innerText"));
+                                Municipal_AssessedValue.Add(valuerowTD[2].GetAttribute("innerText"));
+                                Municipal_Exemptions.Add(valuerowTD[3].GetAttribute("innerText"));
+                                Municipal_TaxableValue.Add(valuerowTD[4].GetAttribute("innerText"));
                             }
                             else if (i == 3)
                             {
-                                Other_Districts_marketValue.Add(valuerowTD[1].Text);
-                                Other_Districts_AssessedValue.Add(valuerowTD[2].Text);
-                                Other_Districts_Exemptions.Add(valuerowTD[3].Text);
-                                Other_Districts_TaxableValue.Add(valuerowTD[4].Text);
+                                Other_Districts_marketValue.Add(valuerowTD[1].GetAttribute("innerText"));
+                                Other_Districts_AssessedValue.Add(valuerowTD[2].GetAttribute("innerText"));
+                                Other_Districts_Exemptions.Add(valuerowTD[3].GetAttribute("innerText"));
+                                Other_Districts_TaxableValue.Add(valuerowTD[4].GetAttribute("innerText"));
                             }
 
 

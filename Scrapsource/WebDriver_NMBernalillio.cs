@@ -64,9 +64,16 @@ namespace ScrapMaricopa.Scrapsource
                     {
                         string address = houseno + " " + sname;
                         gc.TitleFlexSearch(orderNumber, parcelNumber, "", address, "NM", "Bernalillo");
-                        if (HttpContext.Current.Session["TitleFlex_Search"] != null && HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes")
+                        if ((HttpContext.Current.Session["TitleFlex_Search"] != null && HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes"))
                         {
+                            driver.Quit();
                             return "MultiParcel";
+                        }
+                        else if (HttpContext.Current.Session["titleparcel"].ToString() == "")
+                        {
+                            HttpContext.Current.Session["Nodata_NMBernalillio"] = "Yes";
+                            driver.Quit();
+                            return "No Data Found";
                         }
                         parcelNumber = HttpContext.Current.Session["titleparcel"].ToString();
                         searchType = "parcel";
@@ -103,42 +110,43 @@ namespace ScrapMaricopa.Scrapsource
                         {
                             srtAddress = driver.FindElement(By.XPath("//*[@id='frmMain']/table/tbody/tr/td/div/div/table[2]/tbody/tr/td/table/tbody/tr[3]/td/center/table[1]/tbody/tr/td[3]")).Text;
                             Address = Convert.ToInt32(WebDriverTest.Between(srtAddress, "Displaying 1 - ", " of"));
+
+
+                            if (Address > 15)
+                            {
+                                HttpContext.Current.Session["multiParcel_NMBernalillo_count"] = "Maximum";
+                                driver.Quit();
+                                return "Maximum";
+                            }
+                            if (srtAddress != "" && Address <= 15 && !result.Contains("Return to Search Results"))
+                            {
+                                IWebElement IAddressTable = driver.FindElement(By.XPath("//*[@id='searchResults']/tbody"));
+                                IList<IWebElement> IAddressrow = IAddressTable.FindElements(By.TagName("tr"));
+                                IList<IWebElement> IAddressTD;
+                                foreach (IWebElement Row in IAddressrow)
+                                {
+                                    IAddressTD = Row.FindElements(By.TagName("td"));
+                                    HttpContext.Current.Session["multiparcel_NMBernalillo"] = "Yes";
+                                    if (IAddressTD.Count != 0 && !Row.Text.Contains("Parcel ID") && Row.Text != "")
+                                    {
+                                        string ParcelID = IAddressTD[0].Text;
+                                        string Owner = IAddressTD[1].Text;
+                                        string Addres = IAddressTD[2].Text;
+                                        string Property = Owner + "~" + Addres;
+                                        gc.insert_date(orderNumber, ParcelID, 98, Property, 1, DateTime.Now);
+                                        gc.CreatePdf_WOP(orderNumber, "Mulitparcelgrid", driver, "NM", "Bernalillo");
+                                    }
+                                }
+                                driver.Quit();
+                                return "MultiParcel";
+                            }
+                            else
+                            {
+
+                            }
                         }
                         catch { }
-
-                        if (Address > 15)
-                        {
-                            HttpContext.Current.Session["multiParcel_NMBernalillo_count"] = "Maximum";
-                            return "Maximum";
-                        }
-                        if (srtAddress != "" && Address <= 15 && !result.Contains("Return to Search Results"))
-                        {
-                            IWebElement IAddressTable = driver.FindElement(By.XPath("//*[@id='searchResults']/tbody"));
-                            IList<IWebElement> IAddressrow = IAddressTable.FindElements(By.TagName("tr"));
-                            IList<IWebElement> IAddressTD;
-                            foreach (IWebElement Row in IAddressrow)
-                            {
-                                IAddressTD = Row.FindElements(By.TagName("td"));
-                                HttpContext.Current.Session["multiparcel_NMBernalillo"] = "Yes";
-                                if (IAddressTD.Count != 0 && !Row.Text.Contains("Parcel ID") && Row.Text != "")
-                                {
-                                    string ParcelID = IAddressTD[0].Text;
-                                    string Owner = IAddressTD[1].Text;
-                                    string Addres = IAddressTD[2].Text;
-                                    string Property = Owner + "~" + Addres;
-                                    gc.insert_date(orderNumber, ParcelID, 98, Property, 1, DateTime.Now);
-                                    gc.CreatePdf_WOP(orderNumber, "Mulitparcelgrid", driver, "NM", "Bernalillo");
-                                }
-                            }
-                            driver.Quit();
-                            return "MultiParcel";
-                        }
-
-                        else
-                        {
-
-                        }
-                    }
+                    }                    
 
                     if (searchType == "parcel")
                     {
@@ -156,6 +164,18 @@ namespace ScrapMaricopa.Scrapsource
                         driver.FindElement(By.XPath("//*[@id='btSearch']")).SendKeys(Keys.Enter);
                         Thread.Sleep(6000);
                     }
+
+                    try
+                    {
+                        IWebElement INodata = driver.FindElement(By.XPath("//*[@id='frmMain']/table/tbody/tr/td/div/div/table[2]"));
+                        if(INodata.Text.Contains("search did not find any records"))
+                        {
+                            HttpContext.Current.Session["Nodata_NMBernalillio"] = "Yes";
+                            driver.Quit();
+                            return "No Data Found";
+                        }
+                    }
+                    catch { }
 
                     //Property Details  
                     driver.FindElement(By.XPath("//*[@id='sidemenu']/li[1]/a")).SendKeys(Keys.Enter);

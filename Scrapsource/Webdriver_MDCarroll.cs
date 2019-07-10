@@ -55,18 +55,18 @@ namespace ScrapMaricopa.Scrapsource
                     {
                         string titleaddress = houseno + " " + sname + " " + direction + " " + directParcel;
                         gc.TitleFlexSearch(orderNumber, parcelNumber, ownername, titleaddress, "MD", "Carroll");
-
-                        parcelNumber = HttpContext.Current.Session["titleparcel"].ToString();
-
-                        if (HttpContext.Current.Session["TitleFlex_Search"] != null)
+                        if ((HttpContext.Current.Session["TitleFlex_Search"] != null && HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes"))
                         {
-                            if (HttpContext.Current.Session["TitleFlex_Search"].ToString() == "Yes")
-                            {
-                                driver.Quit();
-                                return "MultiParcel";
-                            }
+                            driver.Quit();
+                            return "MultiParcel";
                         }
-
+                        else if (HttpContext.Current.Session["titleparcel"].ToString() == "")
+                        {
+                            HttpContext.Current.Session["Nodata_MDCaroll"] = "Yes";
+                            driver.Quit();
+                            return "No Data Found";
+                        }
+                        parcelNumber = HttpContext.Current.Session["titleparcel"].ToString();
                         searchType = "parcel";
                     }
                     if (searchType == "address")
@@ -103,6 +103,7 @@ namespace ScrapMaricopa.Scrapsource
                                 if (MultiOwnerRow.Count > 28)
                                 {
                                     HttpContext.Current.Session["MDCarroll_Count"] = "Maimum";
+                                    driver.Quit();
                                     return "Maximum";
                                 }
                             }
@@ -162,6 +163,19 @@ namespace ScrapMaricopa.Scrapsource
                         driver.FindElement(By.XPath("//*[@id='MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_StepNavigationTemplateContainerID_btnStepNextButton']")).SendKeys(Keys.Enter);
                         Thread.Sleep(3000);
                     }
+
+                    try
+                    {
+                        IWebElement INodata = driver.FindElement(By.Id("MainContent_MainContent_cphMainContentArea_ucSearchType_lblErr"));
+                        if (INodata.Text.Contains("no records that match your criteria"))
+                        {
+                            HttpContext.Current.Session["Nodata_MDCaroll"] = "Yes";
+                            driver.Quit();
+                            return "No Data Found";
+                        }
+                    }
+                    catch { }
+
                     string LegalDescription = "", Parcel = "", Use = "", PrincipalResidence = "", Map = "", Grid = "", SubDistrict = "", Subdivision = "", Section = "", Block = "", Lot = "", AssessmentYear = "", Town = "";
                     string HomesteadApplicationStatus = "", HomeownersTaxCreditApplicationStatus = "", HomeownersTaxCreditApplicationDate = "", District = "";
                     parcelNumber = driver.FindElement(By.XPath("//*[@id='MainContent_MainContent_cphMainContentArea_ucSearchType_wzrdRealPropertySearch_ucDetailsSearch_dlstDetaisSearch_lblDetailsStreetHeader_0']")).Text.Replace("Folio:", "");
