@@ -400,7 +400,7 @@ namespace ScrapMaricopa.Scrapsource
                     int Month = DateTime.Now.Month;
                     int yearcount = DateTime.Now.Year;
                     if (Month < 9)
-                    {   
+                    {
                         yearcount--;
                     }
                     for (int i = 0; i <= 2; i++)
@@ -437,8 +437,8 @@ namespace ScrapMaricopa.Scrapsource
                             string StrTaxPaid = gc.Between(ITaxOwner.Text, "PAID BY", "ON BEHALF OF");
                             string StrTaxBehalf = GlobalClass.After(ITaxOwner.Text, "ON BEHALF OF").Replace("\r\n", "");
 
-                            string installTitle = "", firstInstalldel="", secondInstalldel="", firstInstallRem ="", secondInstallRem="", firstInstall = "", secondInstall = "", totalInstall = "", firstInstalltaxpaid="", secondInstalltaxpaid="";
-                            int installcount=0;
+                            string installTitle = "", firstInstalldel = "", secondInstalldel = "", firstInstallRem = "", secondInstallRem = "", firstInstall = "", secondInstall = "", totalInstall = "", firstInstalltaxpaid = "", secondInstalltaxpaid = "";
+                            int installcount = 0;
                             IWebElement ITaxInstall = driver.FindElement(By.XPath("//*[@id='content']/center[1]/table/tbody/tr[2]/td[1]/table[1]"));
                             IList<IWebElement> ITaxInstallRow = ITaxInstall.FindElements(By.TagName("tr"));
                             IList<IWebElement> ITaxInstallTD;
@@ -453,12 +453,12 @@ namespace ScrapMaricopa.Scrapsource
                                     if (ITaxInstallTH.Count == 1 && !install.Text.Contains("TOTAL DUE:"))
                                     {
                                         string Currentstatus = yearcount + "~" + ITaxInstallTH[0].Text + "~" + ITaxInstallTD[0].Text + "~" + ITaxInstallTD[1].Text + "~" + ITaxInstallTD[2].Text;
-                                        if(ITaxInstallTH[0].Text== "TAX DUE:")
+                                        if (ITaxInstallTH[0].Text == "TAX DUE:")
                                         {
                                             firstInstall = ITaxInstallTD[0].Text;
-                                            secondInstall= ITaxInstallTD[1].Text;
-                                            totalInstall= ITaxInstallTD[2].Text;
-                                            if(firstInstall!="")
+                                            secondInstall = ITaxInstallTD[1].Text;
+                                            totalInstall = ITaxInstallTD[2].Text;
+                                            if (firstInstall != "")
                                             {
                                                 amck.Instamount1 = firstInstall;
                                             }
@@ -471,7 +471,7 @@ namespace ScrapMaricopa.Scrapsource
                                         {
                                             firstInstalltaxpaid = ITaxInstallTD[0].Text;
                                             secondInstalltaxpaid = ITaxInstallTD[1].Text;
-                                          
+
                                             if (firstInstalltaxpaid != "")
                                             {
                                                 amck.Instamountpaid1 = firstInstalltaxpaid.Replace("(", "").Replace(")", ""); ;
@@ -537,8 +537,16 @@ namespace ScrapMaricopa.Scrapsource
                             }
                             if (i == 0)
                             {
-                                gc.InsertAmrockTax(orderNumber, amck.TaxId, amck.Instamount1, amck.Instamount2, amck.Instamount3, amck.Instamount4, amck.Instamountpaid1, amck.Instamountpaid2, amck.Instamountpaid3, amck.Instamountpaid4, amck.InstPaidDue1, amck.InstPaidDue2, amck.instPaidDue3, amck.instPaidDue4, amck.IsDelinquent);
-                            }
+                                    if(amck.IsDelinquent != "Yes")
+                            {
+                        gc.InsertAmrockTax(orderNumber, amck.TaxId, amck.Instamount1, amck.Instamount2, amck.Instamount3, amck.Instamount4, amck.Instamountpaid1, amck.Instamountpaid2, amck.Instamountpaid3, amck.Instamountpaid4, amck.InstPaidDue1, amck.InstPaidDue2, amck.instPaidDue3, amck.instPaidDue4, amck.IsDelinquent);
+                           }
+                            else
+                            {
+                        gc.InsertAmrockTax(orderNumber, amck.TaxId, null, null, null, null, null, null, null, null, null, null, null, null, amck.IsDelinquent);
+
+                               }
+                    }
                             string HistoryYear = "", HistoryAmount = "";
                             IWebElement ITaxHistory = driver.FindElement(By.XPath("//*[@id='content']/center[1]/table/tbody/tr[2]/td[1]/table[2]/tbody"));
                             IList<IWebElement> ITaxHistoryRow = ITaxHistory.FindElements(By.TagName("tr"));

@@ -29,7 +29,7 @@ namespace ScrapMaricopa.Scrapsource
 {
     public class WebDriver_FLBroward
     {
-        string strMulti = "-", strParcel = "-", strMultiDetails = "-", strParcelNumber = "-", strOwner = "-", strAddress = "-", strProeprtyAddress = "-", strNeighborhood="", strOwnerName = "-",
+        string strMulti = "-", strParcel = "-", strMultiDetails = "-", strParcelNumber = "-", strOwner = "-", strAddress = "-", strProeprtyAddress = "-", strNeighborhood = "", strOwnerName = "-",
                strMailingAddress = "-", strLegalDiscription = "-", strYear = "-", strLand = "-", strBuilding = "-", strMarket = "-", strAssessed = "-", strTax = "-",
                strType = "-", strTaxType = "-", strAlternetKey = "-", strEscrowCode = "-", strMillageCode = "-", strTaxAuthority = "-", strMillege = "-", strAssess = "-",
                strExemption = "-", strTaxable = "-", strTaxAmount = "-", strParcelNo = "-", strTaxCom = "-", strLInk = "-", strDate = "-", strAmount = "-", strFace = "-",
@@ -41,6 +41,7 @@ namespace ScrapMaricopa.Scrapsource
                strVTaxType = "-", strNVTaxType = "-", strcombine = "-", strLTaxAuthority = "-", strLMillege = "-", strLAssess = "-", strLExemption = "-", strLTaxable = "-", strLTaxAmount = "-",
                 strTaxFeed = "", strBillEff = "", strRate = "", strBillPayAmount = "", strBillPayReceipt = "";
         int MultiCount, AnualBillCount, TaxCount = 0, ParcelCount = 0;
+        int currentYear = 0;
         IWebDriver driver;
         IList<IWebElement> taxPaymentdetails, taxPaymentAmountdetails, Itaxtd;
         List<string> strSecured = new List<string>();
@@ -51,7 +52,7 @@ namespace ScrapMaricopa.Scrapsource
         DBconnection db = new DBconnection();
         MySqlConnection con = new MySqlConnection(ConfigurationManager.ConnectionStrings["MyConnectionString"].ToString());
         GlobalClass gc = new GlobalClass();
-
+        Amrock amc = new Amrock();
         public string FTP_FLBroward(string houseno, string sname, string strStreetType, string strDirection, string unitnumber, string parcelNumber, string ownername, string searchType, string orderNumber, string directParcel)
         {
             GlobalClass.global_orderNo = orderNumber;
@@ -548,9 +549,11 @@ namespace ScrapMaricopa.Scrapsource
                     catch { }
 
                     //Property Details 
+                    string TotalAasessed = "", YearBuilt = "";
                     strProeprtyAddress = driver.FindElement(By.XPath("/html/body/table[2]/tbody/tr/td/table/tbody/tr[1]/td[1]/table[1]/tbody/tr/td[1]/table/tbody/tr[1]/td[2]")).Text;
                     strParcelNumber = driver.FindElement(By.XPath("/html/body/table[2]/tbody/tr/td/table/tbody/tr[1]/td[1]/table[1]/tbody/tr/td[3]/table/tbody/tr[1]/td[2]")).Text;
                     parcelNumber = strParcelNumber;
+                    amc.TaxId = parcelNumber;
                     strOwnerName = driver.FindElement(By.XPath("/html/body/table[2]/tbody/tr/td/table/tbody/tr[1]/td[1]/table[1]/tbody/tr/td[1]/table/tbody/tr[2]/td[2]")).Text;
                     strMailingAddress = driver.FindElement(By.XPath("/html/body/table[2]/tbody/tr/td/table/tbody/tr[1]/td[1]/table[1]/tbody/tr/td[1]/table/tbody/tr[3]/td[2]")).Text;
                     strLegalDiscription = driver.FindElement(By.XPath("/html/body/table[2]/tbody/tr/td/table/tbody/tr[1]/td[1]/table[3]/tbody/tr/td[2]")).Text;
@@ -578,6 +581,19 @@ namespace ScrapMaricopa.Scrapsource
                             string strAssessmentDetails = strYear + "~" + strLand + "~" + strBuilding + "~" + strMarket + "~" + strAssessed + "~" + strTax;
                             gc.insert_date(orderNumber, strParcelNumber, 294, strAssessmentDetails, 1, DateTime.Now);
                         }
+                        //AMC Total Assessed Value
+                        try
+                        {
+                            if (IProTabletd.Count != 0 && !ass.Text.Contains("Property Assessment Values") && !ass.Text.Contains("Year") && (!ass.Text.Contains("Click here to see") && !ass.Text.Contains("Exemptions and Taxable Values as reflected")))
+                            {
+                                string tagname = IProTabletd[0].GetAttribute("bgcolor");
+                                if (tagname.Contains("#FFFF00"))
+                                {
+                                    TotalAasessed = IProTabletd[3].Text;
+                                }
+                            }
+                        }
+                        catch { }
                     }
 
                     IWebElement IAssessTax = driver.FindElement(By.XPath("/html/body/table[2]/tbody/tr/td/table/tbody/tr[1]/td[1]/table[7]/tbody"));
@@ -599,6 +615,23 @@ namespace ScrapMaricopa.Scrapsource
                             gc.insert_date(orderNumber, strParcelNumber, 400, strTaxAssess, 1, DateTime.Now);
                         }
                     }
+
+                    //AMC Year Built
+                    try
+                    {
+                        IWebElement IYearBuilt = driver.FindElement(By.XPath("/html/body/table[2]/tbody/tr/td/table/tbody/tr[1]/td[1]/table[9]/tbody/tr/td[2]/table"));
+                        IList<IWebElement> IYearBuiltRow = IYearBuilt.FindElements(By.TagName("tr"));
+                        IList<IWebElement> IYearBuiltTD;
+                        foreach (IWebElement year in IYearBuiltRow)
+                        {
+                            IYearBuiltTD = year.FindElements(By.TagName("td"));
+                            if (IYearBuiltTD.Count != 0)
+                            {
+                                YearBuilt = IYearBuiltTD[0].Text.Replace("Eff./Act. Year Built", "").Replace(":", "").Trim();
+                            }
+                        }
+                    }
+                    catch { }
 
                     AssessmentTime = DateTime.Now.ToString("HH:mm:ss");
 
@@ -813,6 +846,7 @@ namespace ScrapMaricopa.Scrapsource
                         //*[@id="content"]/div[1]/div[7]/div/div[1]/div[2]/form/button
                         strType = driver.FindElement(By.XPath("//*[@id='content']/div[1]/div[7]/div/div[1]/div[2]")).Text;
                         strTaxType = GlobalClass.Before(strType, "\r\nPrint this bill (PDF)");
+                        amc.TaxYear = gc.Between(strTaxType, "Real Estate ", " Annual bill");
                     }
                     catch { }
 
@@ -995,6 +1029,7 @@ namespace ScrapMaricopa.Scrapsource
                             {
                                 strcombine = driver.FindElement(By.XPath("//*[@id='content']/div[1]/div[7]/div/p")).Text;
                                 strcombine = GlobalClass.After(strcombine, "Combined taxes and assessments: ");
+                                amc.Instamount1 = strcombine;
                                 string strTaxDetails = strTaxType + "~" + strcombine + "~" + "" + "~" + "";
                                 gc.insert_date(orderNumber, strParcelNumber, 298, strTaxDetails, 1, DateTime.Now);
                             }
@@ -1017,7 +1052,7 @@ namespace ScrapMaricopa.Scrapsource
                                         {
                                             strDate = GlobalClass.Before(strTaxCom, "\r\n");
                                             strAmount = GlobalClass.After(strTaxCom, "\r\n");
-
+                                            amc.DiscountDate1 = strDate;
                                             string strTaxDetails = strTaxType + "~" + "" + "~" + strDate + "~" + strAmount;
                                             gc.insert_date(orderNumber, strParcelNumber, 298, strTaxDetails, 1, DateTime.Now);
                                         }
@@ -1026,6 +1061,51 @@ namespace ScrapMaricopa.Scrapsource
                             }
                         }
                     }
+
+                    try
+                    {
+                        if (currentYear < 1)
+                        {
+                            string strstatus = driver.FindElement(By.XPath("//*[@id='content']/div[1]/div[7]/div/div[6]")).Text;
+                            string[] paiddue = strstatus.Split('\r');
+
+                            if (strstatus.Contains("Paid") || strstatus.Contains("PAID"))
+                            {
+                                string[] due = paiddue[0].Trim().Replace("\n","").Replace("  ", " ").Split(' ');
+                                amc.IsDelinquent = "No";
+                                amc.InstPaidDue1 = "Paid";
+                                amc.Instamountpaid1 = due[2];
+                                gc.InsertAmrockTax(orderNumber, amc.TaxId, amc.Instamount1, amc.Instamount2, amc.Instamount3, amc.Instamount4, amc.Instamountpaid1, amc.Instamountpaid2, amc.Instamountpaid3, amc.Instamountpaid4, amc.InstPaidDue1, amc.InstPaidDue2, amc.instPaidDue3, amc.instPaidDue4, amc.IsDelinquent);
+                                currentYear++;
+                            }
+                            if (strstatus.Contains("Pay this bill"))
+                            {
+                                double Combine = Convert.ToDouble(strcombine.Replace("$", "").Trim());
+                                double amount = Convert.ToDouble(strstatus.Replace("Pay this bill:", "").Replace("$", "").Trim());
+                                if (Combine > amount)
+                                {
+                                    amc.IsDelinquent = "Yes";
+                                    amc.InstPaidDue1 = "Due";
+                                }
+                                if (Combine == amount)
+                                {
+                                    amc.IsDelinquent = "No";
+                                    amc.InstPaidDue1 = "Due";
+                                }
+                                //if (Combine < amount)
+                                //{
+                                //    amc.IsDelinquent = "Yes";
+                                //    amc.InstPaidDue1 = "Due";
+                                //}
+                                amc.Instamountpaid1 = strstatus.Replace("Pay this bill:", "").Trim();
+                                gc.InsertAmrockTax(orderNumber, amc.TaxId, amc.Instamount1, amc.Instamount2, amc.Instamount3, amc.Instamount4, amc.Instamountpaid1, amc.Instamountpaid2, amc.Instamountpaid3, amc.Instamountpaid4, amc.InstPaidDue1, amc.InstPaidDue2, amc.instPaidDue3, amc.instPaidDue4, amc.IsDelinquent);
+
+                                currentYear++;
+                            }
+
+                        }
+                    }
+                    catch { }
 
                     try
                     {
@@ -1038,7 +1118,7 @@ namespace ScrapMaricopa.Scrapsource
                     string certificate = "", strCertificate = "", stradvertisedNo = "", strFaceAmount = "", strIssuedDate = "", strExpirationDate = "", strBuyer = "", strInterestRate = "", IssuedYear = "", strIssuedYear = "";
                     try
                     {
-                        if (strIssue.Contains("Pay this bill:") || strTaxBill.Contains("Cannot be paid online") || strTaxBill.Contains("PAID"))
+                        if (strPaid.Contains("Pay this bill") || strTaxBill.Contains("Cannot be paid online") || strTaxBill.Contains("PAID"))
                         {
                             try
                             {
@@ -1091,9 +1171,10 @@ namespace ScrapMaricopa.Scrapsource
                     catch { }
                 }
                 catch { }
+
             }
         }
-        public void ByVisibleElement(IWebElement Element,IWebDriver driver1)
+        public void ByVisibleElement(IWebElement Element, IWebDriver driver1)
         {
             IJavaScriptExecutor js = (IJavaScriptExecutor)driver1;
             js.ExecuteScript("arguments[0].scrollIntoView();", Element);

@@ -186,6 +186,8 @@ namespace ScrapMaricopa.Scrapsource
 
                     }
 
+                    Amrock amc = new Amrock();
+
                     //property details
                     Thread.Sleep(3000);
                     driver.FindElement(By.XPath("//*[@id='ctl00_cphBody_gridResults']/tbody/tr[2]/td[1]/a")).SendKeys(Keys.Enter);
@@ -200,11 +202,13 @@ namespace ScrapMaricopa.Scrapsource
                     catch { }
                     siteaddr = driver.FindElement(By.XPath("//*[@id='primaryAddr']/div")).Text.Trim().Replace("\r\n", ",");
                     outparcelno = driver.FindElement(By.Id("ctl00_cphBody_lblRealEstateNumber")).Text.Trim();
+                    amc.TaxId = outparcelno;
                     tax_dist = driver.FindElement(By.Id("ctl00_cphBody_lblTaxDistrict")).Text.Trim();
                     propuse = driver.FindElement(By.Id("ctl00_cphBody_lblPropertyUse")).Text.Trim();
                     subdivision = driver.FindElement(By.Id("ctl00_cphBody_lblSubdivision")).Text.Trim();
                     try
                     {
+                        //amc Year Built
                         year_built = driver.FindElement(By.Id("ctl00_cphBody_repeaterBuilding_ctl00_lblYearBuilt")).Text.Trim();
                     }
                     catch { }
@@ -305,6 +309,7 @@ namespace ScrapMaricopa.Scrapsource
                             else if (i == 7)
                             {
                                 AssessedValue.Add(valuerowTD[0].Text);
+                                //amc.TotalAssessedValue = valuerowTD[0].Text;
                                 AssessedValue.Add(valuerowTD[1].Text);
                             }
 
@@ -422,6 +427,7 @@ namespace ScrapMaricopa.Scrapsource
                             if (IUnpaidTd.Count != 0)
                             {
                                 strTaxYear = IUnpaidTd[0].Text;
+                                amc.TaxYear = IUnpaidTd[0].Text;
                                 strTaxFolio = IUnpaidTd[1].Text;
                                 strTaxCertificateYear = IUnpaidTd[2].Text;
                                 strTaxCertificateNo = IUnpaidTd[3].Text;
@@ -549,6 +555,17 @@ namespace ScrapMaricopa.Scrapsource
                                     {
                                         taxdue = tax_year + "~" + priortaxdettablerowTD[1].Text + "~" + priortaxdettablerowTD[2].Text + "~" + priortaxdettablerowTD[3].Text + "~" + priortaxdettablerowTD[4].Text + "~" + priortaxdettablerowTD[5].Text + "~" + priortaxdettablerowTD[6].Text + "~" + priortaxdettablerowTD[7].Text + "~" + priortaxdettablerowTD[8].Text;
                                         gc.insert_date(orderNumber, outparcelno, 341, taxdue, 1, DateTime.Now);
+
+                                        amc.Instamount1 = priortaxdettablerowTD[2].Text;
+                                        amc.Instamountpaid1 = priortaxdettablerowTD[6].Text;
+                                        if(!priortaxdettablerowTD[6].Text.Contains("$0.00"))
+                                        {
+                                            amc.InstPaidDue1 = "Paid";
+                                        }
+                                        if (priortaxdettablerowTD[6].Text.Contains("$0.00"))
+                                        {
+                                            amc.InstPaidDue1 = "Due";
+                                        }
                                     }
                                 }
                                 f++;
@@ -652,6 +669,9 @@ namespace ScrapMaricopa.Scrapsource
                         }
 
                     }
+                  
+                    gc.InsertAmrockTax(orderNumber, amc.TaxId, amc.Instamount1, amc.Instamount2, amc.Instamount3, amc.Instamount4, amc.Instamountpaid1, amc.Instamountpaid2, amc.Instamountpaid3, amc.Instamountpaid4, amc.InstPaidDue1, amc.InstPaidDue2, amc.instPaidDue3, amc.instPaidDue4, amc.IsDelinquent);
+
                     TaxTime = DateTime.Now.ToString("HH:mm:ss");
                     driver.Quit();
                     gc.mergpdf(orderNumber, "FL", "Duval");

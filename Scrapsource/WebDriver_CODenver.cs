@@ -24,6 +24,7 @@ namespace ScrapMaricopa.Scrapsource
 {
     public class WebDriver_CODenver
     {
+        Amrock amck = new Amrock();
         IWebDriver driver;
         DBconnection db = new DBconnection();
         MySqlParameter[] mParam;
@@ -201,7 +202,7 @@ namespace ScrapMaricopa.Scrapsource
                             //     owner_Address~Legal_Description~Property_Type~Tax_District~Year_built
                         }
                     }
-
+                    amck.TaxId = parcel_no;
                     //assessment details
                     gc.CreatePdf(orderNumber, parcel_no, "Property", driver, "CO", "Denver");
                     driver.FindElement(By.XPath(" //*[@id='Assessment']/a")).Click();
@@ -265,7 +266,7 @@ namespace ScrapMaricopa.Scrapsource
                     List<string> Interest = new List<string>();
                     List<string> Paid = new List<string>();
                     List<string> Due = new List<string>();
-
+                    string due1 = "", due2 = "",lienfees="",interest="",due="";
                     int i = 0;
                     foreach (IWebElement row in valuetableRow)
                     {
@@ -283,7 +284,9 @@ namespace ScrapMaricopa.Scrapsource
                             else if (i == 1)
                             {
                                 Original_Tax_Levy.Add(valuerowTD[1].Text);
+                                amck.Instamount1 = valuerowTD[1].Text;
                                 Original_Tax_Levy.Add(valuerowTD[2].Text);
+                                amck.Instamount2 = valuerowTD[2].Text;
                                 Original_Tax_Levy.Add(valuerowTD[3].Text);
                             }
                             else if (i == 2)
@@ -291,30 +294,81 @@ namespace ScrapMaricopa.Scrapsource
                                 Liens_Fees.Add(valuerowTD[1].Text);
                                 Liens_Fees.Add(valuerowTD[2].Text);
                                 Liens_Fees.Add(valuerowTD[3].Text);
+                                lienfees = valuerowTD[3].Text;
+                                
+
                             }
                             else if (i == 3)
                             {
                                 Interest.Add(valuerowTD[1].Text);
                                 Interest.Add(valuerowTD[2].Text);
                                 Interest.Add(valuerowTD[3].Text);
+                                interest = valuerowTD[3].Text;
+                                
                             }
                             else if (i == 4)
                             {
                                 Paid.Add(valuerowTD[1].Text);
+                                amck.Instamountpaid1 = valuerowTD[1].Text;
                                 Paid.Add(valuerowTD[2].Text);
+                                amck.Instamountpaid2 = valuerowTD[2].Text;
                                 Paid.Add(valuerowTD[3].Text);
                             }
                             else if (i == 5)
                             {
                                 Due.Add(valuerowTD[1].Text);
+                                due1 = valuerowTD[1].Text;
+                                if(due1=="$0.00")
+                                {
+                                    amck.InstPaidDue1 = "Paid";
+                                }
+                                else
+                                {
+                                    amck.InstPaidDue1 = "Due";
+                                }
                                 Due.Add(valuerowTD[2].Text);
+                                due2 = valuerowTD[2].Text;
+                                if (due2 == "$0.00")
+                                {
+                                    amck.InstPaidDue2 = "Paid";
+                                }
+                                else
+                                {
+                                    amck.InstPaidDue2 = "Due";
+                                }
                                 Due.Add(valuerowTD[3].Text);
+                                due = valuerowTD[3].Text;
                             }
 
                         }
                         i++;
                     }
+                    if (interest == "$0.00" && lienfees == "$0.00")
+                    {
+                        amck.IsDelinquent = "No";
+                    }
+                    else
+                    {
+                        if(due== "$0.00")
+                        {
+                            amck.IsDelinquent = "No";
+                        }
+                        else
+                        {
+                            amck.IsDelinquent = "Yes";
 
+                        }
+                       
+                    }
+                    if (amck.IsDelinquent != "Yes")
+                    {
+                        gc.InsertAmrockTax(orderNumber, amck.TaxId, amck.Instamount1, amck.Instamount2, amck.Instamount3, amck.Instamount4, amck.Instamountpaid1, amck.Instamountpaid2, amck.Instamountpaid3, amck.Instamountpaid4, amck.InstPaidDue1, amck.InstPaidDue2, amck.instPaidDue3, amck.instPaidDue4, amck.IsDelinquent);
+                    }
+                    else
+                    {
+                        gc.InsertAmrockTax(orderNumber, amck.TaxId, null, null, null, null, null, null, null, null, null, null, null, null, amck.IsDelinquent);
+
+                    }
                     //*[@id="TaxesTable"]/tbody[1]/tr/th[2]
                     //*[@id="TaxesTable"]/tbody[1]/tr/th[3]
                     //*[@id="TaxesTable"]/tbody[1]/tr/th[4]

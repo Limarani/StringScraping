@@ -635,10 +635,15 @@ namespace ScrapMaricopa.Scrapsource
 
 
                     }
+                    if (amck.IsDelinquent != "Yes")
+                    {
+                        gc.InsertAmrockTax(orderNumber, amck.TaxId, amck.Instamount1, amck.Instamount2, amck.Instamount3, amck.Instamount4, amck.Instamountpaid1, amck.Instamountpaid2, amck.Instamountpaid3, amck.Instamountpaid4, amck.InstPaidDue1, amck.InstPaidDue2, amck.instPaidDue3, amck.instPaidDue4, amck.IsDelinquent);
+                    }
+                    else
+                    {
+                        gc.InsertAmrockTax(orderNumber, amck.TaxId, null, null, null, null, null, null, null, null, null, null, null, null, amck.IsDelinquent);
 
-                    gc.InsertAmrockTax(orderNumber, amck.TaxId,amck.Instamount1, amck.Instamount2, amck.Instamount3, amck.Instamount4, amck.Instamountpaid1, amck.Instamountpaid2, amck.Instamountpaid3, amck.Instamountpaid4, amck.InstPaidDue1, amck.InstPaidDue2, amck.instPaidDue3, amck.instPaidDue4 ,amck.IsDelinquent);
-
-
+                    }
                     //....ending
                     try
                     {

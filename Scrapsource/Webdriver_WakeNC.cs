@@ -30,6 +30,8 @@ namespace ScrapMaricopa.Scrapsource
 {
     public class Webdriver_WakeNC
     {
+        Amrock amck = new Amrock();
+        int i = 0;
         IWebDriver driver;
         DBconnection db = new DBconnection();
         MySqlConnection con = new MySqlConnection(ConfigurationManager.ConnectionStrings["MyConnectionString"].ToString());
@@ -410,7 +412,7 @@ namespace ScrapMaricopa.Scrapsource
                     string accountnumber = "";
 
                     int month = DateTime.Now.Month;
-                    if (month < 9)
+                    if (month < 6)
                     {
                         cuttentyearr--;
                     }
@@ -422,7 +424,7 @@ namespace ScrapMaricopa.Scrapsource
                         foreach (IWebElement Percelclick in parcelclickrow)
                         {
                             Pareclclicktd = Percelclick.FindElements(By.TagName("td"));
-                            if (Pareclclicktd.Count >22)
+                            if (Pareclclicktd.Count >19)
                             {
                                 accountnumber = Pareclclicktd[7].Text;
                                 string[] accountarray = accountnumber.Split('-');
@@ -451,7 +453,7 @@ namespace ScrapMaricopa.Scrapsource
                         foreach (IWebElement Percelclick in parcelclickrow)
                         {
                             Pareclclicktd = Percelclick.FindElements(By.TagName("td"));
-                            if (Pareclclicktd.Count > 22)
+                            if (Pareclclicktd.Count > 19)
                             {
                                 accountnumber = Pareclclicktd[7].Text;
                                 string[] accountarray = accountnumber.Split('-');
@@ -481,7 +483,7 @@ namespace ScrapMaricopa.Scrapsource
                         foreach (IWebElement Percelclick in parcelclickrow)
                         {
                             Pareclclicktd = Percelclick.FindElements(By.TagName("td"));
-                            if (Pareclclicktd.Count > 22)
+                            if (Pareclclicktd.Count > 19)
                             {
                                 accountnumber = Pareclclicktd[7].Text;
                                 string[] accountarray = accountnumber.Split('-');
@@ -595,6 +597,7 @@ namespace ScrapMaricopa.Scrapsource
             string Accuntno = driver.FindElement(By.XPath("//*[@id='Table23']/tbody/tr/td[2]")).Text;
             string[] taxyearsplit = Accuntno.Split('-');
             string taxyear = taxyearsplit[1].Trim();
+            amck.TaxYear = taxyear;
             string ownernametax = driver.FindElement(By.XPath("//*[@id='Table22']/tbody")).Text;
             string Billdate = driver.FindElement(By.XPath("//*[@id='Table24']/tbody/tr[1]/td[2]")).Text;
             string duedate = driver.FindElement(By.XPath("//*[@id='Table24']/tbody/tr[2]/td[2]")).Text;
@@ -602,6 +605,7 @@ namespace ScrapMaricopa.Scrapsource
             string status1 = driver.FindElement(By.XPath("//*[@id='Table25']/tbody/tr[1]")).Text;
             string status = GlobalClass.After(status1, "Acct Status:");
             string Reid = driver.FindElement(By.XPath("//*[@id='Table1']/tbody/tr[4]/td[1]/table/tbody/tr/td[2]")).Text;
+            amck.TaxId = Reid;
             string Locationtax = driver.FindElement(By.XPath("//*[@id='Table1']/tbody/tr[3]/td[1]/table/tbody/tr[2]/td[2]")).Text;
             string Municipality = driver.FindElement(By.XPath("//*[@id='Table1']/tbody/tr[3]/td[2]/table/tbody/tr[1]/td[2]")).Text;
             string FireDistrict = driver.FindElement(By.XPath("//*[@id='Table1']/tbody/tr[3]/td[2]/table/tbody/tr[2]/td[2]")).Text;
@@ -621,6 +625,10 @@ namespace ScrapMaricopa.Scrapsource
                 {
                     string paymentResult = taxyear + "~" + paymentAllocationid[0].Text + "~" + paymentAllocationid[1].Text;
                     gc.insert_date(orderNumber, parcel_number, 1551, paymentResult, 1, DateTime.Now);
+                    if(paymentAllocationid[0].Text.Trim().Contains("Total Paid"))
+                    {
+                        amck.Instamountpaid1 = paymentAllocationid[1].Text;
+                    }
                 }
             }
 
@@ -634,6 +642,30 @@ namespace ScrapMaricopa.Scrapsource
                 {
                     string paymentResult1 = taxyear + "~" + paymentAllocationid1[0].Text + "~" + paymentAllocationid1[1].Text;
                     gc.insert_date(orderNumber, parcel_number, 1551, paymentResult1, 1, DateTime.Now);
+                    if (paymentAllocationid1[0].Text.Trim().Contains("Interest Due"))
+                    {
+                        string Inrestamt = paymentAllocationid1[1].Text;
+                        if(Inrestamt.Trim()=="0.00")
+                        {
+                            amck.IsDelinquent = "NO";
+                        }
+                        else
+                        {
+                            amck.IsDelinquent = "Yes";
+                        }
+                    }
+                    if(paymentAllocationid1[0].Text.Trim().Contains("Total Due"))
+                    {
+                        string Dueamt= paymentAllocationid1[1].Text;
+                        if(Dueamt.Trim()=="0.00")
+                        {
+                            amck.InstPaidDue1 = "Paid";
+                        }
+                        else
+                        {
+                            amck.InstPaidDue1 = "Due";
+                        }
+                    }
                 }
             }
 
@@ -652,7 +684,16 @@ namespace ScrapMaricopa.Scrapsource
                 {
                     string TaxunitsResult = taxyear + "~" + TaxunitsTD[0].Text + "~" + " " + "~" + TaxunitsTD[1].Text + "~" + TaxunitsTD[2].Text;
                     gc.insert_date(orderNumber, parcel_number, 1552, TaxunitsResult, 1, DateTime.Now);
+                    if(TaxunitsTD[0].Text.Trim().Contains("Total Billed"))
+                    {
+                        amck.Instamount1 = TaxunitsTD[1].Text;
+                    }
                 }
+            }
+            if (i == 0)
+            {
+                gc.InsertAmrockTax(orderNumber, amck.TaxId, amck.Instamount1, amck.Instamount2, amck.Instamount3, amck.Instamount4, amck.Instamountpaid1, amck.Instamountpaid2, amck.Instamountpaid3, amck.Instamountpaid4, amck.InstPaidDue1, amck.InstPaidDue2, amck.instPaidDue3, amck.instPaidDue4, amck.IsDelinquent);
+                i++;
             }
             ByVisibleElement(driver.FindElement(By.XPath("//*[@id='testdefault']/table/tbody/tr[2]/td/table/tbody/tr[3]/td/table/tbody/tr[1]/td")));
             gc.CreatePdf(orderNumber, parcel_number.Replace("/", ""), "Tax Property Last" + cuttentyearr, driver, "NC", "Wake");

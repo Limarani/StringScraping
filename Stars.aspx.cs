@@ -15221,16 +15221,10 @@ namespace ScrapMaricopa
 
                 }
 
-
-
-
-
-
-
-
-
                 //last single
 
+
+                Amrockdisplay();
             }
             catch (Exception ex)
             {
@@ -15242,7 +15236,23 @@ namespace ScrapMaricopa
             bloc2.Visible = true;
 
         }
-
+        DataSet ds = new DataSet();
+        protected void Amrockdisplay()
+        {
+            try
+            {
+                LabelAmrock.Text = "Amrock Mapping Tax Details";
+                string strquery = "select TaxId,Instamount1,Instamount2,Instamount3,Instamount4,Instamountpaid1,Instamountpaid2,Instamountpaid3,Instamountpaid4,InstPaidDue1,InstPaidDue2,InstPaidDue3,InstPaidDue4,IsDelinquent from tbl_taxauthorities2 where  Orderno='" + txtorderno.Text + "' ";
+                ds = dbconn.ExecuteQuery(strquery);
+                GridViewAmrock.DataSource = ds;
+                GridViewAmrock.DataBind();
+            }
+            catch (Exception ex)
+            {
+                GlobalClass.LogError(ex, txtorderno.Text);
+                MessageBox("Page encountered an error while processing your request : Try Again...");
+            }
+        }
         //Bernalillo
         private void BindMulti_NMBernalillo(string orderNo)
         {
@@ -22235,6 +22245,8 @@ namespace ScrapMaricopa
 
                     }
                     //last multi
+
+
                 }
                 bloc1.Visible = true;
                 bloc2.Visible = true;

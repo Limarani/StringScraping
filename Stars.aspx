@@ -223,7 +223,13 @@
         </div>
         <br />
         <br />
-
+         <div style="margin-left: 38px; margin-right: 30px;">
+            <asp:Label runat="server" ID="LabelAmrock" CssClass="GridLabel"></asp:Label>
+            <br />
+               <asp:GridView ID="GridViewAmrock" runat="server" CssClass="table table-striped table-bordered table-hover th" GridLines="None" AutoGenerateColumns="true">
+                <HeaderStyle BackColor="dimgray" ForeColor="White" />
+            </asp:GridView>
+        </div>
         <div style="margin-left: 38px; margin-right: 30px;">
             <asp:Label runat="server" ID="Label3" CssClass="GridLabel"></asp:Label>
             <br />
